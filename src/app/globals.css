@@ -1,0 +1,49 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #0f0f0f;
+  --foreground: #e5e5e5;
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+}
+
+.receipt-paper {
+  position: relative;
+  border-radius: 2px;
+}
+
+.receipt-paper::before,
+.receipt-paper::after {
+  content: "";
+  display: block;
+  height: 12px;
+  width: 100%;
+  position: absolute;
+  left: 0;
+  background-size: 24px 12px;
+}
+
+.receipt-paper::before {
+  top: -12px;
+  background-image: linear-gradient(135deg, #faf9f5 33.33%, transparent 33.33%),
+    linear-gradient(225deg, #faf9f5 33.33%, transparent 33.33%);
+  background-position: 0 0;
+}
+
+.receipt-paper::after {
+  bottom: -12px;
+  background-image: linear-gradient(315deg, #faf9f5 33.33%, transparent 33.33%),
+    linear-gradient(45deg, #faf9f5 33.33%, transparent 33.33%);
+  background-position: 0 0;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
