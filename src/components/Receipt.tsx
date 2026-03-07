@@ -1,6 +1,6 @@
 "use client";
 
-import { forwardRef } from "react";
+import { forwardRef, useMemo } from "react";
 
 export interface LineItem {
   label: string;
@@ -16,155 +16,182 @@ export interface ReceiptData {
   userName?: string;
 }
 
-function formatDollars(value: number): string {
-  return `$${value.toFixed(2)}`;
+function fmt(value: number): string {
+  return `$${value.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 }
 
+// Deterministic barcode from receipt ID
+function generateBarcode(id: string): number[] {
+  let seed = 0;
+  for (let i = 0; i < id.length; i++) {
+    seed = ((seed << 5) - seed + id.charCodeAt(i)) | 0;
+  }
+  const bars: number[] = [];
+  for (let i = 0; i < 50; i++) {
+    seed = (seed * 16807 + 1) % 2147483647;
+    bars.push(seed);
+  }
+  return bars;
+}
 
-const Receipt = forwardRef<HTMLDivElement, { data: ReceiptData }>(
-  ({ data }, ref) => {
+const Receipt = forwardRef<HTMLDivElement, { data: ReceiptData; animate?: boolean }>(
+  ({ data, animate = false }, ref) => {
     const subtotal = data.lineItems.reduce((sum, item) => sum + item.value, 0);
-    const tax = subtotal * 0.0869; // "humor tax"
+    const tax = subtotal * 0.0869;
     const total = data.totalValue || subtotal + tax;
 
     const dateObj = new Date(data.date);
     const dateStr = dateObj.toLocaleDateString("en-US", {
-      weekday: "long",
+      weekday: "short",
       year: "numeric",
-      month: "long",
+      month: "short",
       day: "numeric",
     });
     const timeStr = dateObj.toLocaleTimeString("en-US", {
       hour: "2-digit",
       minute: "2-digit",
+      second: "2-digit",
     });
+
+    const receiptId = data.id?.slice(-8).toUpperCase() || "00000000";
+    const barcode = useMemo(
+      () => generateBarcode(data.id || "default"),
+      [data.id]
+    );
 
     return (
       <div
         ref={ref}
-        className="receipt-paper mx-auto max-w-[420px] bg-[#faf9f5] px-8 py-10 shadow-2xl"
-        style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E")`,
-        }}
+        className={`receipt-paper paper-texture mx-auto w-[380px] px-7 py-9 ${animate ? "animate-receipt-print" : ""}`}
       >
-        {/* Header */}
-        <div className="text-center font-receipt text-black">
-          <pre className="text-xs leading-tight tracking-wide">
-            {`
-  ████████▄     ▄████████ ▀████    ▐████▀
-  ███   ▀███   ███    ███   ███▌   ████▀
-  ███    ███   ███    ███    ███   ▐███
-  ███    ███   ███    ███    ▀███▄███▀
-  ███    ███ ▀███████████    ████▀██▄
-  ███    ███   ███    ███   ▐███  ▀███
-  ███   ▄███   ███    ███  ▄███     ███▄
-  ████████▀    ███    █▀  ████       ███▄
-            `.trim()}
-          </pre>
-          <p className="mt-2 text-sm font-bold tracking-[0.3em] text-black">
+        {/* ── Header ─────────────────────────── */}
+        <div className="text-center">
+          <div className="font-receipt text-ink font-bold text-[28px] tracking-[0.25em] leading-none">
             DAXERLY
-          </p>
-          <p className="mt-1 text-[10px] tracking-widest text-gray-500">
-            DAILY WORK RECEIPT
-          </p>
+          </div>
+          <div className="mt-1.5 font-receipt text-[9px] tracking-[0.35em] text-ink-faded uppercase">
+            Daily Work Receipt
+          </div>
+          <div className="mt-3 mx-auto w-48 border-b border-ink/10" />
         </div>
 
-        {/* Date */}
-        <div className="mt-6 font-receipt text-xs text-black">
+        {/* ── Meta ────────────────────────────── */}
+        <div className="mt-5 font-receipt text-[11px] text-ink-light leading-relaxed">
           <div className="flex justify-between">
-            <span>{dateStr}</span>
+            <span>DATE</span>
+            <span className="text-ink">{dateStr}</span>
           </div>
           <div className="flex justify-between">
-            <span>Generated: {timeStr}</span>
-            <span>#{data.id?.slice(-6).toUpperCase() || "000000"}</span>
+            <span>TIME</span>
+            <span className="text-ink">{timeStr}</span>
           </div>
           {data.userName && (
-            <div className="mt-1">
-              <span>Employee: {data.userName}</span>
+            <div className="flex justify-between">
+              <span>CLERK</span>
+              <span className="text-ink">{data.userName}</span>
             </div>
           )}
-        </div>
-
-        {/* Divider */}
-        <div className="my-4 border-t-2 border-dashed border-gray-400" />
-
-        {/* Column Headers */}
-        <div className="font-receipt text-xs text-gray-500">
           <div className="flex justify-between">
-            <span>ITEM</span>
-            <span>VALUE</span>
+            <span>TXN</span>
+            <span className="text-ink font-medium">#{receiptId}</span>
           </div>
         </div>
 
-        <div className="my-2 border-t border-dashed border-gray-300" />
+        {/* ── Divider ────────────────────────── */}
+        <div className="my-4 border-t border-dashed border-ink/20" />
 
-        {/* Line Items */}
-        <div className="space-y-2 font-receipt text-sm text-black">
+        {/* ── Column Header ──────────────────── */}
+        <div className="flex justify-between font-receipt text-[9px] text-ink-faded tracking-wider uppercase mb-2">
+          <span>Description</span>
+          <span>Amount</span>
+        </div>
+        <div className="border-t border-ink/10 mb-3" />
+
+        {/* ── Line Items ─────────────────────── */}
+        <div className={`space-y-2.5 ${animate ? "stagger" : ""}`}>
           {data.lineItems.map((item, i) => (
-            <div key={i}>
-              <div className="flex justify-between">
-                <span className="flex-1 truncate pr-2">{item.label}</span>
-                <span className="font-bold text-amber-600">
-                  {formatDollars(item.value)}
+            <div key={i} className="font-receipt">
+              {/* Item row with dot leaders */}
+              <div className="flex items-baseline text-[12.5px]">
+                <span className="text-ink font-medium shrink-0 max-w-[220px] truncate">
+                  {item.label}
+                </span>
+                <span className="flex-1 mx-1 border-b border-dotted border-ink/15 relative top-[-3px]" />
+                <span className="text-ink font-semibold shrink-0 tabular-nums">
+                  {fmt(item.value)}
                 </span>
               </div>
-              <div className="text-[10px] text-gray-400 pl-2">
-                qty: {item.quantity}
+              {/* Quantity subline */}
+              <div className="text-[9.5px] text-ink-faded pl-0.5 mt-0.5">
+                {item.quantity}
               </div>
             </div>
           ))}
         </div>
 
-        {/* Divider */}
-        <div className="my-4 border-t-2 border-dashed border-gray-400" />
+        {/* ── Divider ────────────────────────── */}
+        <div className="mt-5 mb-3 border-t-2 border-dashed border-ink/20" />
 
-        {/* Totals */}
-        <div className="font-receipt text-sm text-black space-y-1">
-          <div className="flex justify-between">
+        {/* ── Totals ─────────────────────────── */}
+        <div className="font-receipt space-y-1.5">
+          <div className="flex justify-between text-[12px] text-ink-light">
             <span>SUBTOTAL</span>
-            <span>{formatDollars(subtotal)}</span>
+            <span className="text-ink tabular-nums">{fmt(subtotal)}</span>
           </div>
-          <div className="flex justify-between text-gray-400 text-xs">
+          <div className="flex justify-between text-[10px] text-ink-faded">
             <span>PRODUCTIVITY TAX (8.69%)</span>
-            <span>{formatDollars(tax)}</span>
+            <span className="tabular-nums">{fmt(tax)}</span>
           </div>
-          <div className="my-2 border-t border-dashed border-gray-300" />
-          <div className="flex justify-between text-lg font-bold">
-            <span>TOTAL VALUE</span>
-            <span className="text-amber-600">
-              {formatDollars(total)}
+
+          <div className="my-2 border-t border-ink/10" />
+
+          {/* Grand Total */}
+          <div className="flex justify-between items-baseline pt-1">
+            <span className="text-[14px] font-bold text-ink tracking-wide">
+              TOTAL
+            </span>
+            <span className="text-[22px] font-bold text-ink tabular-nums leading-none">
+              {fmt(total)}
             </span>
           </div>
         </div>
 
-        {/* Divider */}
-        <div className="my-4 border-t-2 border-dashed border-gray-400" />
+        {/* ── Divider ────────────────────────── */}
+        <div className="mt-4 mb-4 border-t border-dashed border-ink/20" />
 
-        {/* Footer */}
-        <div className="text-center font-receipt text-[10px] text-gray-400 space-y-2">
-          <p>PAYMENT METHOD: HARD WORK</p>
-          <p className="italic">
-            &quot;Proof of work, formatted as a receipt&quot;
-          </p>
-          <div className="mt-4 flex justify-center">
-            {/* Simple barcode pattern */}
-            <div className="flex gap-px items-end">
-              {Array.from({ length: 40 }, (_, i) => (
-                <div
-                  key={i}
-                  className="bg-black"
-                  style={{
-                    width: Math.random() > 0.5 ? 2 : 1,
-                    height: 20 + Math.random() * 10,
-                  }}
-                />
-              ))}
-            </div>
+        {/* ── Footer ─────────────────────────── */}
+        <div className="text-center font-receipt space-y-2">
+          <div className="text-[9px] text-ink-faded tracking-wider">
+            PAYMENT METHOD: HARD WORK
           </div>
-          <p className="mt-2 text-[9px]">
-            THANK YOU FOR YOUR PRODUCTIVITY
-          </p>
-          <p className="text-[9px]">daxerly.com</p>
+
+          {/* Barcode */}
+          <div className="flex justify-center items-end gap-[1px] py-3">
+            {barcode.map((val, i) => (
+              <div
+                key={i}
+                className="bg-ink/80"
+                style={{
+                  width: val % 3 === 0 ? 2 : 1,
+                  height: 24 + (val % 12),
+                }}
+              />
+            ))}
+          </div>
+
+          <div className="text-[8px] text-ink-faded font-medium tracking-[0.2em]">
+            {receiptId}
+          </div>
+
+          <div className="pt-2 border-t border-ink/5">
+            <p className="text-[9.5px] text-ink-light italic leading-relaxed">
+              &ldquo;Proof of work, formatted as a receipt.&rdquo;
+            </p>
+          </div>
+
+          <div className="text-[8px] text-ink-faded/60 tracking-wider pt-1">
+            DAXERLY.COM
+          </div>
         </div>
       </div>
     );

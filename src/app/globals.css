@@ -2,9 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Base ──────────────────────────────────────────────── */
+
 :root {
-  --background: #0f0f0f;
-  --foreground: #e5e5e5;
+  --background: #08080a;
+  --foreground: #d4d4d8;
+  --paper: #f5f0e8;
 }
 
 body {
@@ -12,34 +15,161 @@ body {
   background: var(--background);
 }
 
+/* ── Receipt Paper ─────────────────────────────────────── */
+
 .receipt-paper {
   position: relative;
-  border-radius: 2px;
+  border-radius: 0;
+  box-shadow:
+    0 1px 2px rgba(0,0,0,0.2),
+    0 4px 16px rgba(0,0,0,0.3),
+    0 20px 60px rgba(0,0,0,0.4);
 }
 
-.receipt-paper::before,
+/* Zigzag torn top edge */
+.receipt-paper::before {
+  content: "";
+  display: block;
+  height: 10px;
+  width: 100%;
+  position: absolute;
+  top: -10px;
+  left: 0;
+  background-image:
+    linear-gradient(135deg, var(--paper) 33.33%, transparent 33.33%),
+    linear-gradient(225deg, var(--paper) 33.33%, transparent 33.33%);
+  background-size: 20px 10px;
+  background-position: 0 0;
+}
+
+/* Zigzag torn bottom edge */
 .receipt-paper::after {
   content: "";
   display: block;
-  height: 12px;
+  height: 10px;
   width: 100%;
   position: absolute;
+  bottom: -10px;
   left: 0;
-  background-size: 24px 12px;
-}
-
-.receipt-paper::before {
-  top: -12px;
-  background-image: linear-gradient(135deg, #faf9f5 33.33%, transparent 33.33%),
-    linear-gradient(225deg, #faf9f5 33.33%, transparent 33.33%);
+  background-image:
+    linear-gradient(315deg, var(--paper) 33.33%, transparent 33.33%),
+    linear-gradient(45deg, var(--paper) 33.33%, transparent 33.33%);
+  background-size: 20px 10px;
   background-position: 0 0;
 }
 
-.receipt-paper::after {
-  bottom: -12px;
-  background-image: linear-gradient(315deg, #faf9f5 33.33%, transparent 33.33%),
-    linear-gradient(45deg, #faf9f5 33.33%, transparent 33.33%);
-  background-position: 0 0;
+/* Receipt warm glow on hover */
+.receipt-glow {
+  transition: filter 0.4s ease;
+}
+.receipt-glow:hover {
+  filter: drop-shadow(0 0 40px rgba(229, 164, 17, 0.08));
+}
+
+/* ── Dot Leader Lines ──────────────────────────────────── */
+
+.dot-leader {
+  display: flex;
+  align-items: baseline;
+}
+
+.dot-leader::after {
+  content: "";
+  flex: 1;
+  border-bottom: 1px dotted #b0a890;
+  margin: 0 4px;
+  position: relative;
+  top: -3px;
+}
+
+/* ── Noise Texture Overlay ─────────────────────────────── */
+
+.noise-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+
+/* ── Paper Texture ─────────────────────────────────────── */
+
+.paper-texture {
+  background-color: var(--paper);
+  background-image:
+    url("data:image/svg+xml,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='paper'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='5' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paper)' opacity='0.04'/%3E%3C/svg%3E");
+}
+
+/* ── Thermal Fade Effect ───────────────────────────────── */
+
+.thermal-text {
+  color: #1a1812;
+}
+
+.thermal-text-faded {
+  color: #6a6355;
+}
+
+.thermal-text-light {
+  color: #9a9285;
+}
+
+/* ── Custom Scrollbar ──────────────────────────────────── */
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #27272a;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3f3f46;
+}
+
+/* ── Stagger Animations ────────────────────────────────── */
+
+.stagger > * {
+  opacity: 0;
+  animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.stagger > *:nth-child(1) { animation-delay: 0.05s; }
+.stagger > *:nth-child(2) { animation-delay: 0.1s; }
+.stagger > *:nth-child(3) { animation-delay: 0.15s; }
+.stagger > *:nth-child(4) { animation-delay: 0.2s; }
+.stagger > *:nth-child(5) { animation-delay: 0.25s; }
+.stagger > *:nth-child(6) { animation-delay: 0.3s; }
+.stagger > *:nth-child(7) { animation-delay: 0.35s; }
+.stagger > *:nth-child(8) { animation-delay: 0.4s; }
+.stagger > *:nth-child(9) { animation-delay: 0.45s; }
+.stagger > *:nth-child(10) { animation-delay: 0.5s; }
+
+@keyframes fadeUp {
+  0% { transform: translateY(24px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+/* ── Grid Background ───────────────────────────────────── */
+
+.grid-bg {
+  background-image:
+    linear-gradient(rgba(229, 164, 17, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(229, 164, 17, 0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+/* ── Gradient Mask ─────────────────────────────────────── */
+
+.fade-bottom {
+  mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
 }
 
 @layer utilities {
