@@ -194,13 +194,28 @@ export default function LandingPage() {
 
       {/* ── Footer ─────────────────────────── */}
       <footer className="relative z-10 border-t border-surface-border/30 py-8 px-8 lg:px-12">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <span className="font-mono text-[10px] tracking-[0.2em] text-zinc-700 uppercase">
-            Daxerly &copy; {new Date().getFullYear()}
-          </span>
-          <span className="font-mono text-[10px] tracking-wider text-zinc-700 italic">
-            Proof of work, formatted as a receipt.
-          </span>
+        <div className="max-w-7xl mx-auto font-mono text-[10px] text-zinc-600 tracking-wider">
+          <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
+            <span className="uppercase">
+              &copy; 2026 Apoorv Darshan. All rights reserved.
+            </span>
+            <span className="italic text-zinc-700">
+              Proof of work, formatted as a receipt.
+            </span>
+          </div>
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+            <a href="/privacy" className="hover:text-zinc-400 transition-colors uppercase">Privacy</a>
+            <span className="text-zinc-800">|</span>
+            <a href="/tos" className="hover:text-zinc-400 transition-colors uppercase">Terms</a>
+            <span className="text-zinc-800">|</span>
+            <a href="mailto:ad13dtu@gmail.com" className="hover:text-zinc-400 transition-colors">ad13dtu@gmail.com</a>
+            <span className="text-zinc-800">|</span>
+            <a href="https://x.com/apoorvdarshan" target="_blank" rel="noopener noreferrer" className="hover:text-zinc-400 transition-colors">X @apoorvdarshan</a>
+            <span className="text-zinc-800">|</span>
+            <a href="https://github.com/apoorvdarshan/daxerly" target="_blank" rel="noopener noreferrer" className="hover:text-zinc-400 transition-colors">GitHub</a>
+            <span className="text-zinc-800">|</span>
+            <a href="https://linkedin.com/in/apoorvdarshan" target="_blank" rel="noopener noreferrer" className="hover:text-zinc-400 transition-colors">LinkedIn</a>
+          </div>
         </div>
       </footer>
     </div>
