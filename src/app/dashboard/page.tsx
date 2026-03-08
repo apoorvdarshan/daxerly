@@ -1,9 +1,10 @@
 "use client";
 
 import { useSession, signIn, signOut } from "next-auth/react";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Receipt, { ReceiptData } from "@/components/Receipt";
+import { toPng } from "html-to-image";
 
 interface ConnectionStatus {
   github: boolean;
@@ -92,6 +93,9 @@ export default function DashboardPage() {
   const [receipts, setReceipts] = useState<ReceiptData[]>([]);
   const [generating, setGenerating] = useState(false);
   const [latestReceipt, setLatestReceipt] = useState<ReceiptData | null>(null);
+  const [copied, setCopied] = useState(false);
+  const [downloading, setDownloading] = useState(false);
+  const receiptRef = useRef<HTMLDivElement>(null);
 
   const fetchData = useCallback(async () => {
     const [connRes, recRes] = await Promise.all([
@@ -126,6 +130,44 @@ export default function DashboardPage() {
       }
     } finally {
       setGenerating(false);
+    }
+  };
+
+  const downloadImage = async () => {
+    if (!receiptRef.current) return;
+    setDownloading(true);
+    try {
+      const dataUrl = await toPng(receiptRef.current, {
+        backgroundColor: "#08080a",
+        pixelRatio: 3,
+      });
+      const link = document.createElement("a");
+      link.download = `daxerly-${latestReceipt?.id || "receipt"}.png`;
+      link.href = dataUrl;
+      link.click();
+    } catch (err) {
+      console.error("Failed to generate image:", err);
+    } finally {
+      setDownloading(false);
+    }
+  };
+
+  const copyToClipboard = async () => {
+    if (!receiptRef.current) return;
+    try {
+      const dataUrl = await toPng(receiptRef.current, {
+        backgroundColor: "#08080a",
+        pixelRatio: 3,
+      });
+      const res = await fetch(dataUrl);
+      const blob = await res.blob();
+      await navigator.clipboard.write([
+        new ClipboardItem({ "image/png": blob }),
+      ]);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
+    } catch (err) {
+      console.error("Failed to copy:", err);
     }
   };
 
@@ -309,10 +351,7 @@ export default function DashboardPage() {
                   {receipts.slice(0, 7).map((receipt, i) => (
                     <button
                       key={receipt.id}
-                      onClick={() => {
-                        setLatestReceipt(receipt);
-                        if (receipt.id) router.push(`/receipt/${receipt.id}`);
-                      }}
+                      onClick={() => setLatestReceipt(receipt)}
                       className="group w-full flex items-center justify-between border border-surface-border/30 bg-surface/30 hover:bg-surface/60 hover:border-surface-border/60 px-5 py-4 transition-all duration-300 text-left"
                     >
                       <div className="flex items-center gap-4">
@@ -362,19 +401,16 @@ export default function DashboardPage() {
             {latestReceipt ? (
               <div className="space-y-6">
                 <div className="receipt-glow">
-                  <Receipt data={latestReceipt} animate />
+                  <Receipt ref={receiptRef} data={latestReceipt} animate />
                 </div>
-                <div className="flex justify-center">
+                <div className="flex gap-3 justify-center">
                   <button
-                    onClick={() =>
-                      latestReceipt.id &&
-                      router.push(`/receipt/${latestReceipt.id}`)
-                    }
-                    className="group flex items-center gap-2 font-mono text-[10px] text-zinc-600 hover:text-accent tracking-wider uppercase transition-colors duration-300"
+                    onClick={downloadImage}
+                    disabled={downloading}
+                    className="group flex items-center gap-2.5 border border-surface-border/50 bg-surface/50 hover:bg-surface hover:border-surface-border px-5 py-2.5 transition-all duration-300"
                   >
-                    View &amp; Share
                     <svg
-                      className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-0.5"
+                      className="w-3.5 h-3.5 text-zinc-500 group-hover:text-zinc-300 transition-colors"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -382,10 +418,58 @@ export default function DashboardPage() {
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M17 8l4 4m0 0l-4 4m4-4H3"
+                        strokeWidth={1.5}
+                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
                       />
                     </svg>
+                    <span className="font-mono text-[10px] text-zinc-400 tracking-wider uppercase">
+                      {downloading ? "Saving..." : "Download PNG"}
+                    </span>
+                  </button>
+
+                  <button
+                    onClick={copyToClipboard}
+                    className="group flex items-center gap-2.5 bg-accent hover:bg-accent-light px-5 py-2.5 transition-all duration-300 hover:shadow-[0_0_40px_rgba(229,164,17,0.1)]"
+                  >
+                    {copied ? (
+                      <>
+                        <svg
+                          className="w-3.5 h-3.5 text-background"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M5 13l4 4L19 7"
+                          />
+                        </svg>
+                        <span className="font-mono text-[10px] text-background font-medium tracking-wider uppercase">
+                          Copied!
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        <svg
+                          className="w-3.5 h-3.5 text-background"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={1.5}
+                            d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                          />
+                        </svg>
+                        <span className="font-mono text-[10px] text-background font-medium tracking-wider uppercase">
+                          Copy to Clipboard
+                        </span>
+                      </>
+                    )}
                   </button>
                 </div>
               </div>
