@@ -2,7 +2,7 @@
 
 import { useSession, signIn, signOut } from "next-auth/react";
 import { useEffect, useState, useCallback, useRef } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Receipt, { ReceiptData } from "@/components/Receipt";
 import { toPng } from "html-to-image";
 import ShareButton from "@/components/SocialShareButtons";
@@ -82,6 +82,7 @@ const providerMeta = [
 export default function DashboardPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [connections, setConnections] = useState<ConnectionStatus>({
     github: false,
     slack: false,
@@ -96,12 +97,15 @@ export default function DashboardPage() {
   const [latestReceipt, setLatestReceipt] = useState<ReceiptData | null>(null);
   const [copied, setCopied] = useState(false);
   const [downloading, setDownloading] = useState(false);
+  const [subscriptionActive, setSubscriptionActive] = useState<boolean | null>(null);
+  const [subscribing, setSubscribing] = useState(false);
   const receiptRef = useRef<HTMLDivElement>(null);
 
   const fetchData = useCallback(async () => {
-    const [connRes, recRes] = await Promise.all([
+    const [connRes, recRes, subRes] = await Promise.all([
       fetch("/api/connections"),
       fetch("/api/receipts"),
+      fetch("/api/subscription/status"),
     ]);
     if (connRes.ok) {
       const data = await connRes.json();
@@ -113,12 +117,25 @@ export default function DashboardPage() {
       setReceipts(data);
       if (data.length > 0) setLatestReceipt(data[0]);
     }
+    if (subRes.ok) {
+      const data = await subRes.json();
+      setSubscriptionActive(data.active);
+    } else {
+      setSubscriptionActive(false);
+    }
   }, []);
 
   useEffect(() => {
     if (status === "unauthenticated") router.push("/");
     if (session) fetchData();
   }, [session, status, router, fetchData]);
+
+  useEffect(() => {
+    if (searchParams.get("subscribed") === "true") {
+      setSubscriptionActive(true);
+      router.replace("/dashboard");
+    }
+  }, [searchParams, router]);
 
   const generateReceipt = async () => {
     setGenerating(true);
@@ -128,9 +145,24 @@ export default function DashboardPage() {
         const receipt = await res.json();
         setLatestReceipt(receipt);
         setReceipts((prev) => [receipt, ...prev]);
+      } else if (res.status === 403) {
+        setSubscriptionActive(false);
       }
     } finally {
       setGenerating(false);
+    }
+  };
+
+  const handleSubscribe = async () => {
+    setSubscribing(true);
+    try {
+      const res = await fetch("/api/subscription/create", { method: "POST" });
+      if (res.ok) {
+        const { approvalUrl } = await res.json();
+        window.location.href = approvalUrl;
+      }
+    } finally {
+      setSubscribing(false);
     }
   };
 
@@ -276,57 +308,123 @@ export default function DashboardPage() {
               </div>
             </section>
 
-            {/* Section: Generate */}
+            {/* Section: Generate / Paywall */}
             <section>
-              <button
-                onClick={generateReceipt}
-                disabled={generating}
-                className="group w-full relative overflow-hidden bg-accent hover:bg-accent-light disabled:bg-zinc-900 disabled:border disabled:border-zinc-800 text-background disabled:text-zinc-700 font-display font-bold py-5 text-base tracking-wide transition-all duration-300 hover:shadow-[0_0_60px_rgba(229,164,17,0.12)]"
-              >
-                {generating ? (
-                  <span className="flex items-center justify-center gap-3">
-                    <svg
-                      className="animate-spin w-4 h-4"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="3"
-                      />
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-                      />
-                    </svg>
-                    <span className="font-mono text-xs tracking-widest uppercase">
-                      Printing receipt...
+              {subscriptionActive === null ? (
+                <div className="w-full border border-surface-border/30 py-5 flex justify-center">
+                  <div className="h-4 w-32 bg-zinc-800/50 animate-pulse rounded" />
+                </div>
+              ) : subscriptionActive ? (
+                <button
+                  onClick={generateReceipt}
+                  disabled={generating}
+                  className="group w-full relative overflow-hidden bg-accent hover:bg-accent-light disabled:bg-zinc-900 disabled:border disabled:border-zinc-800 text-background disabled:text-zinc-700 font-display font-bold py-5 text-base tracking-wide transition-all duration-300 hover:shadow-[0_0_60px_rgba(229,164,17,0.12)]"
+                >
+                  {generating ? (
+                    <span className="flex items-center justify-center gap-3">
+                      <svg
+                        className="animate-spin w-4 h-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="3"
+                        />
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                        />
+                      </svg>
+                      <span className="font-mono text-xs tracking-widest uppercase">
+                        Printing receipt...
+                      </span>
                     </span>
-                  </span>
-                ) : (
-                  <span className="flex items-center justify-center gap-3">
-                    Generate Today&apos;s Receipt
-                    <svg
-                      className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M17 8l4 4m0 0l-4 4m4-4H3"
-                      />
-                    </svg>
-                  </span>
-                )}
-              </button>
+                  ) : (
+                    <span className="flex items-center justify-center gap-3">
+                      Generate Today&apos;s Receipt
+                      <svg
+                        className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M17 8l4 4m0 0l-4 4m4-4H3"
+                        />
+                      </svg>
+                    </span>
+                  )}
+                </button>
+              ) : (
+                <div className="border border-surface-border/40 bg-surface/30 p-6 space-y-4">
+                  <div className="space-y-1">
+                    <h3 className="font-display font-bold text-base text-zinc-200 tracking-wide">
+                      Subscribe to generate receipts
+                    </h3>
+                    <p className="font-mono text-[11px] text-zinc-500 tracking-wider">
+                      $5/month &middot; Cancel anytime
+                    </p>
+                  </div>
+                  <button
+                    onClick={handleSubscribe}
+                    disabled={subscribing}
+                    className="group w-full relative overflow-hidden bg-[#0070ba] hover:bg-[#003087] disabled:bg-zinc-900 disabled:border disabled:border-zinc-800 text-white disabled:text-zinc-700 font-display font-bold py-4 text-sm tracking-wide transition-all duration-300"
+                  >
+                    {subscribing ? (
+                      <span className="flex items-center justify-center gap-3">
+                        <svg
+                          className="animate-spin w-4 h-4"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="3"
+                          />
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                          />
+                        </svg>
+                        <span className="font-mono text-xs tracking-widest uppercase">
+                          Redirecting...
+                        </span>
+                      </span>
+                    ) : (
+                      <span className="flex items-center justify-center gap-3">
+                        Subscribe with PayPal
+                        <svg
+                          className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M17 8l4 4m0 0l-4 4m4-4H3"
+                          />
+                        </svg>
+                      </span>
+                    )}
+                  </button>
+                </div>
+              )}
             </section>
 
             {/* Section: History */}
