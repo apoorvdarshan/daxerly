@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import Receipt, { ReceiptData } from "@/components/Receipt";
 import { toPng } from "html-to-image";
-import SocialShareButtons from "@/components/SocialShareButtons";
+import ShareButton from "@/components/SocialShareButtons";
 
 export default function ReceiptClient({ id }: { id: string }) {
   const [receipt, setReceipt] = useState<ReceiptData | null>(null);
@@ -195,15 +195,8 @@ export default function ReceiptClient({ id }: { id: string }) {
               </>
             )}
           </button>
-        </div>
 
-        {/* Social Share */}
-        <div className="mt-6">
-          <SocialShareButtons
-            receiptId={id}
-            totalValue={`$${receipt.totalValue.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
-            receiptRef={receiptRef}
-          />
+          <ShareButton receiptId={id} receiptRef={receiptRef} />
         </div>
       </main>
     </div>
