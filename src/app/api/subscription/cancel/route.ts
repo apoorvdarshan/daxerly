@@ -27,7 +27,11 @@ export async function POST(req: Request) {
 
   await prisma.subscription.update({
     where: { userId: session.user.id },
-    data: { status: "CANCELLED" },
+    data: {
+      status: "CANCELLED",
+      cancelReason: reason || null,
+      cancelledAt: new Date(),
+    },
   });
 
   return NextResponse.json({ success: true });
