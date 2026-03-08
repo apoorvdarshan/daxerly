@@ -99,6 +99,7 @@ export default function DashboardPage() {
   const [downloading, setDownloading] = useState(false);
   const [subscriptionActive, setSubscriptionActive] = useState<boolean | null>(null);
   const [subscribing, setSubscribing] = useState(false);
+  const [cancelling, setCancelling] = useState(false);
   const receiptRef = useRef<HTMLDivElement>(null);
 
   const fetchData = useCallback(async () => {
@@ -163,6 +164,19 @@ export default function DashboardPage() {
       }
     } finally {
       setSubscribing(false);
+    }
+  };
+
+  const handleCancel = async () => {
+    if (!confirm("Cancel your subscription? You'll keep access until the end of your billing period.")) return;
+    setCancelling(true);
+    try {
+      const res = await fetch("/api/subscription/cancel", { method: "POST" });
+      if (res.ok) {
+        fetchData();
+      }
+    } finally {
+      setCancelling(false);
     }
   };
 
@@ -363,6 +377,13 @@ export default function DashboardPage() {
                       </svg>
                     </span>
                   )}
+                </button>
+                <button
+                  onClick={handleCancel}
+                  disabled={cancelling}
+                  className="w-full mt-2 font-mono text-[10px] text-zinc-600 hover:text-zinc-400 tracking-wider uppercase transition-colors py-2"
+                >
+                  {cancelling ? "Cancelling..." : "Cancel subscription"}
                 </button>
               ) : (
                 <div className="border border-surface-border/40 bg-surface/30 p-6 space-y-4">
