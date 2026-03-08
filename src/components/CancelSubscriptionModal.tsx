@@ -26,6 +26,7 @@ export default function CancelSubscriptionModal({
 }: CancelSubscriptionModalProps) {
   const [step, setStep] = useState<Step>("reason");
   const [reason, setReason] = useState<string>("");
+  const [otherText, setOtherText] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
 
   // Reset state when modal opens
@@ -33,6 +34,7 @@ export default function CancelSubscriptionModal({
     if (open) {
       setStep("reason");
       setReason("");
+      setOtherText("");
       setError(null);
     }
   }, [open]);
@@ -54,7 +56,7 @@ export default function CancelSubscriptionModal({
       const res = await fetch("/api/subscription/cancel", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ reason }),
+        body: JSON.stringify({ reason: reason === "Other" && otherText.trim() ? `Other: ${otherText.trim()}` : reason }),
       });
       if (!res.ok) throw new Error("Failed to cancel subscription");
       onCancelled();
@@ -118,6 +120,15 @@ export default function CancelSubscriptionModal({
                   <span className="text-sm text-zinc-300">{r}</span>
                 </label>
               ))}
+              {reason === "Other" && (
+                <textarea
+                  value={otherText}
+                  onChange={(e) => setOtherText(e.target.value)}
+                  placeholder="Tell us more..."
+                  rows={3}
+                  className="w-full mt-2 bg-background border border-surface-border/40 focus:border-accent/40 px-4 py-3 text-sm text-zinc-300 placeholder:text-zinc-700 font-mono tracking-wider outline-none resize-none transition-colors"
+                />
+              )}
             </div>
 
             <div className="flex items-center justify-between pt-2">
