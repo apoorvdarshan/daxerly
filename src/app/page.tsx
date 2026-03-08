@@ -63,8 +63,21 @@ const integrations = [
 ];
 
 export default function LandingPage() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const router = useRouter();
+
+  if (status === "loading") {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="flex items-center gap-3">
+          <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+          <span className="font-mono text-xs text-zinc-600 tracking-wider">
+            LOADING
+          </span>
+        </div>
+      </div>
+    );
+  }
 
   if (session) {
     router.push("/dashboard");
