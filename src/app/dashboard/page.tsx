@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Receipt, { ReceiptData } from "@/components/Receipt";
 import { toPng } from "html-to-image";
 import ShareButton from "@/components/SocialShareButtons";
+import CancelSubscriptionModal from "@/components/CancelSubscriptionModal";
 
 interface ConnectionStatus {
   github: boolean;
@@ -107,6 +108,7 @@ function DashboardContent() {
   const [downloading, setDownloading] = useState(false);
   const [subscriptionActive, setSubscriptionActive] = useState<boolean | null>(null);
   const [subscribing, setSubscribing] = useState(false);
+  const [showCancelModal, setShowCancelModal] = useState(false);
   const receiptRef = useRef<HTMLDivElement>(null);
 
   const fetchData = useCallback(async () => {
@@ -329,6 +331,13 @@ function DashboardContent() {
                   <span className="font-mono text-[10px] text-emerald-500/80 tracking-wider uppercase">
                     Subscription Active
                   </span>
+                  <span className="text-zinc-700 text-[10px]">&middot;</span>
+                  <button
+                    onClick={() => setShowCancelModal(true)}
+                    className="font-mono text-[10px] text-zinc-600 hover:text-zinc-400 tracking-wider uppercase transition-colors"
+                  >
+                    Cancel
+                  </button>
                 </div>
                 <button
                   onClick={generateReceipt}
@@ -592,6 +601,15 @@ function DashboardContent() {
           </div>
         </div>
       </main>
+
+      <CancelSubscriptionModal
+        open={showCancelModal}
+        onClose={() => setShowCancelModal(false)}
+        onCancelled={() => {
+          setShowCancelModal(false);
+          setSubscriptionActive(false);
+        }}
+      />
     </div>
   );
 }
