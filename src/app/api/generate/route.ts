@@ -8,6 +8,9 @@ import {
   pullCalendarActivity,
   formatCalendarActivity,
 } from "@/lib/integrations/google-calendar";
+import { pullLinearActivity, formatLinearActivity } from "@/lib/integrations/linear";
+import { pullNotionActivity, formatNotionActivity } from "@/lib/integrations/notion";
+import { pullGitLabActivity, formatGitLabActivity } from "@/lib/integrations/gitlab";
 import { summarizeActivities } from "@/lib/summarizer";
 
 export async function POST() {
@@ -42,6 +45,18 @@ export async function POST() {
         case "google": {
           const activity = await pullCalendarActivity(conn.accessToken);
           return formatCalendarActivity(activity);
+        }
+        case "linear": {
+          const activity = await pullLinearActivity(conn.accessToken);
+          return formatLinearActivity(activity);
+        }
+        case "notion": {
+          const activity = await pullNotionActivity(conn.accessToken);
+          return formatNotionActivity(activity);
+        }
+        case "gitlab": {
+          const activity = await pullGitLabActivity(conn.accessToken);
+          return formatGitLabActivity(activity);
         }
         default:
           return [];

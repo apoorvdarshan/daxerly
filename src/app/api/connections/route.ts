@@ -20,5 +20,8 @@ export async function GET() {
     github: providers.includes("github"),
     slack: providers.includes("slack"),
     google: providers.includes("google"),
+    linear: providers.includes("linear"),
+    notion: providers.includes("notion"),
+    gitlab: providers.includes("gitlab"),
   });
 }
