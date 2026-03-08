@@ -15,9 +15,8 @@ export async function GET() {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  const cancellations = await prisma.subscription.findMany({
-    where: { status: "CANCELLED" },
-    orderBy: { cancelledAt: "desc" },
+  const logs = await prisma.cancellationLog.findMany({
+    orderBy: { createdAt: "desc" },
     include: {
       user: {
         select: { email: true, name: true },
@@ -25,12 +24,11 @@ export async function GET() {
     },
   });
 
-  const result = cancellations.map((sub) => ({
-    email: sub.user.email,
-    name: sub.user.name,
-    cancelReason: sub.cancelReason,
-    cancelledAt: sub.cancelledAt,
-    createdAt: sub.createdAt,
+  const result = logs.map((log) => ({
+    email: log.user.email,
+    name: log.user.name,
+    cancelReason: log.reason,
+    cancelledAt: log.createdAt,
   }));
 
   return NextResponse.json(result);

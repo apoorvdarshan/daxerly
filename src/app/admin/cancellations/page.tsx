@@ -7,7 +7,6 @@ interface Cancellation {
   name: string | null;
   cancelReason: string | null;
   cancelledAt: string | null;
-  createdAt: string;
 }
 
 export default function AdminCancellationsPage() {
@@ -57,7 +56,6 @@ export default function AdminCancellationsPage() {
                   <th className="px-4 py-3">User</th>
                   <th className="px-4 py-3">Reason</th>
                   <th className="px-4 py-3">Cancelled At</th>
-                  <th className="px-4 py-3">Subscribed At</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-800">
@@ -78,13 +76,6 @@ export default function AdminCancellationsPage() {
                             year: "numeric",
                           })
                         : "—"}
-                    </td>
-                    <td className="px-4 py-3 text-gray-400">
-                      {new Date(c.createdAt).toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
-                      })}
                     </td>
                   </tr>
                 ))}

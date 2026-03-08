@@ -25,14 +25,22 @@ export async function POST(req: Request) {
 
   await cancelSubscription(sub.paypalSubscriptionId, reason || "User requested cancellation");
 
-  await prisma.subscription.update({
-    where: { userId: session.user.id },
-    data: {
-      status: "CANCELLED",
-      cancelReason: reason || null,
-      cancelledAt: new Date(),
-    },
-  });
+  await Promise.all([
+    prisma.subscription.update({
+      where: { userId: session.user.id },
+      data: {
+        status: "CANCELLED",
+        cancelReason: reason || null,
+        cancelledAt: new Date(),
+      },
+    }),
+    prisma.cancellationLog.create({
+      data: {
+        userId: session.user.id,
+        reason: reason || null,
+      },
+    }),
+  ]);
 
   return NextResponse.json({ success: true });
 }
