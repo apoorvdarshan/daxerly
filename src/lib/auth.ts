@@ -7,12 +7,11 @@ import { prisma } from "./prisma";
 
 const prismaAdapter = PrismaAdapter(prisma);
 const originalLinkAccount = prismaAdapter.linkAccount!;
-prismaAdapter.linkAccount = (account) => {
+/* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any */
+prismaAdapter.linkAccount = (account: any) => {
   // Strip provider-specific fields that aren't in our Account schema
   const {
-    // GitLab extras
     created_at,
-    // Notion extras
     bot_id,
     workspace_name,
     workspace_icon,
@@ -20,11 +19,11 @@ prismaAdapter.linkAccount = (account) => {
     owner,
     duplicated_template_id,
     request_id,
-    // Google extras
     refresh_token_expires_in,
     ...cleanAccount
   } = account as Record<string, unknown>;
   return originalLinkAccount(cleanAccount as any);
+/* eslint-enable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any */
 };
 
 export const authOptions: NextAuthOptions = {

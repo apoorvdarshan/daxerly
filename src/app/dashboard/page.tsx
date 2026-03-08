@@ -587,7 +587,7 @@ function DashboardContent() {
                   </button>
 
                   <ShareButton
-                    receiptId={latestReceipt.id}
+                    receiptId={latestReceipt.id || ""}
                     receiptRef={receiptRef}
                   />
                 </div>

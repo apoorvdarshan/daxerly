@@ -131,6 +131,12 @@ export default function CancelSubscriptionModal({
               )}
             </div>
 
+            {error && (
+              <div className="font-mono text-[11px] text-red-400 tracking-wider">
+                {error}
+              </div>
+            )}
+
             <div className="flex items-center justify-between pt-2">
               <button
                 onClick={onClose}
