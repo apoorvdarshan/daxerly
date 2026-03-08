@@ -240,7 +240,7 @@ function DashboardContent() {
       {/* ── Nav ─────────────────────────────── */}
       <nav className="relative z-10 flex items-center justify-between px-8 lg:px-12 py-5 max-w-[1440px] mx-auto border-b border-surface-border/30">
         <div className="flex items-center gap-3">
-          <div className="w-1.5 h-1.5 rounded-full bg-accent" />
+          <img src="/logo.png" alt="daxerly" className="w-5 h-5" />
           <span className="font-display font-bold text-lg tracking-wide text-foreground">
             daxerly
           </span>

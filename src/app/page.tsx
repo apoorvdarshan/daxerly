@@ -96,7 +96,7 @@ export default function LandingPage() {
       {/* ── Nav ────────────────────────────── */}
       <nav className="relative z-10 flex items-center justify-between px-8 lg:px-12 py-6 max-w-7xl mx-auto">
         <div className="flex items-center gap-3">
-          <div className="w-2 h-2 rounded-full bg-accent animate-glow-pulse" />
+          <img src="/logo.png" alt="daxerly" className="w-5 h-5" />
           <span className="font-display font-bold text-xl tracking-wide text-foreground">
             daxerly
           </span>
