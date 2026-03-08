@@ -5,6 +5,7 @@ import { useEffect, useState, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Receipt, { ReceiptData } from "@/components/Receipt";
 import { toPng } from "html-to-image";
+import SocialShareButtons from "@/components/SocialShareButtons";
 
 interface ConnectionStatus {
   github: boolean;
@@ -472,6 +473,10 @@ export default function DashboardPage() {
                     )}
                   </button>
                 </div>
+                <SocialShareButtons
+                  receiptUrl={`${typeof window !== "undefined" ? window.location.origin : ""}/receipt/${latestReceipt.id}`}
+                  totalValue={`$${latestReceipt.totalValue.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+                />
               </div>
             ) : (
               <div className="w-[380px] border border-dashed border-surface-border/30 flex flex-col items-center justify-center py-32 gap-4">

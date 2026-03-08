@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import { useParams } from "next/navigation";
 import Receipt, { ReceiptData } from "@/components/Receipt";
 import { toPng } from "html-to-image";
+import SocialShareButtons from "@/components/SocialShareButtons";
 
 export default function ReceiptPage() {
   const { id } = useParams<{ id: string }>();
@@ -198,9 +199,12 @@ export default function ReceiptPage() {
           </button>
         </div>
 
-        {/* Tip */}
-        <div className="mt-8 font-mono text-[9px] text-zinc-700 tracking-wider text-center">
-          TIP: PASTE INTO SLACK, TWITTER, OR ANYWHERE
+        {/* Social Share */}
+        <div className="mt-6">
+          <SocialShareButtons
+            receiptUrl={typeof window !== "undefined" ? window.location.href : ""}
+            totalValue={`$${receipt.totalValue.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+          />
         </div>
       </main>
     </div>
