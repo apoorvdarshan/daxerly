@@ -12,35 +12,55 @@ export async function pullGitHubActivity(
   accessToken: string
 ): Promise<GitHubActivity> {
   const octokit = new Octokit({ auth: accessToken });
-  const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+  const since = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
 
   const { data: user } = await octokit.users.getAuthenticated();
   const username = user.login;
 
-  // Get recent events
-  const { data: events } = await octokit.activity.listEventsForAuthenticatedUser(
-    { username, per_page: 100 }
-  );
-
-  const recentEvents = events.filter(
-    (e) => new Date(e.created_at || "").toISOString() >= since
-  );
+  // Get repos the user has pushed to recently
+  const { data: repoList } = await octokit.repos.listForAuthenticatedUser({
+    sort: "pushed",
+    per_page: 10,
+  });
 
   let commits = 0;
   let prsOpened = 0;
   let prsReviewed = 0;
   let issuesClosed = 0;
-  const repos = new Set<string>();
+  const activeRepos: string[] = [];
 
-  for (const event of recentEvents) {
-    if (event.repo) repos.add(event.repo.name);
+  // Count commits across recent repos
+  const commitPromises = repoList.map(async (repo) => {
+    try {
+      const { data: repoCommits } = await octokit.repos.listCommits({
+        owner: repo.owner.login,
+        repo: repo.name,
+        author: username,
+        since,
+        per_page: 100,
+      });
+      if (repoCommits.length > 0) {
+        activeRepos.push(repo.full_name);
+      }
+      return repoCommits.length;
+    } catch {
+      return 0;
+    }
+  });
+
+  const commitCounts = await Promise.all(commitPromises);
+  commits = commitCounts.reduce((sum, c) => sum + c, 0);
+
+  // Get PRs and issues via events API
+  const { data: events } = await octokit.activity.listEventsForAuthenticatedUser(
+    { username, per_page: 100 }
+  );
+
+  for (const event of events) {
+    const createdAt = event.created_at || "";
+    if (createdAt < since) continue;
 
     switch (event.type) {
-      case "PushEvent": {
-        const payload = event.payload as { commits?: unknown[] };
-        commits += payload.commits?.length || 0;
-        break;
-      }
       case "PullRequestEvent": {
         const payload = event.payload as { action?: string };
         if (payload.action === "opened") prsOpened++;
@@ -57,7 +77,7 @@ export async function pullGitHubActivity(
     }
   }
 
-  return { commits, prsOpened, prsReviewed, issuesClosed, repos: Array.from(repos) };
+  return { commits, prsOpened, prsReviewed, issuesClosed, repos: activeRepos };
 }
 
 export function formatGitHubActivity(activity: GitHubActivity) {

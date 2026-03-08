@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Syne, DM_Sans, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/Providers";
+import { Analytics } from "@vercel/analytics/next";
 
 const syne = Syne({
   subsets: ["latin"],
@@ -39,6 +40,7 @@ export default function RootLayout({
         className={`${syne.variable} ${dmSans.variable} ${ibmPlexMono.variable} font-body antialiased bg-background text-foreground min-h-screen selection:bg-accent/20 selection:text-accent`}
       >
         <Providers>{children}</Providers>
+        <Analytics />
       </body>
     </html>
   );
