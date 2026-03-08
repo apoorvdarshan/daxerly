@@ -1,19 +1,15 @@
 "use client";
 
-import { useEffect, useState, useRef, use } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState, useRef } from "react";
+import { useParams } from "next/navigation";
 import Receipt, { ReceiptData } from "@/components/Receipt";
 import { toPng } from "html-to-image";
 
-export default function ReceiptPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = use(params);
-  const router = useRouter();
+export default function ReceiptPage() {
+  const { id } = useParams<{ id: string }>();
   const [receipt, setReceipt] = useState<ReceiptData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [notFound, setNotFound] = useState(false);
   const [copied, setCopied] = useState(false);
   const [downloading, setDownloading] = useState(false);
   const receiptRef = useRef<HTMLDivElement>(null);
@@ -25,9 +21,9 @@ export default function ReceiptPage({
         return res.json();
       })
       .then(setReceipt)
-      .catch(() => router.push("/dashboard"))
+      .catch(() => setNotFound(true))
       .finally(() => setLoading(false));
-  }, [id, router]);
+  }, [id]);
 
   const downloadImage = async () => {
     if (!receiptRef.current) return;
@@ -80,6 +76,23 @@ export default function ReceiptPage({
     );
   }
 
+  if (notFound) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-background">
+        <div className="noise-overlay" />
+        <span className="font-mono text-[10px] text-zinc-600 tracking-wider uppercase mb-4">
+          Receipt not found
+        </span>
+        <a
+          href="/"
+          className="font-mono text-[10px] text-accent hover:text-accent-light tracking-wider uppercase transition-colors"
+        >
+          Go to Daxerly &rarr;
+        </a>
+      </div>
+    );
+  }
+
   if (!receipt) return null;
 
   return (
@@ -90,35 +103,13 @@ export default function ReceiptPage({
       <div className="fixed top-[10%] left-1/2 -translate-x-1/2 w-[400px] h-[400px] bg-accent/[0.03] rounded-full blur-[100px] pointer-events-none" />
 
       {/* ── Nav ─────────────────────────────── */}
-      <nav className="relative z-10 flex items-center justify-between px-8 lg:px-12 py-5 max-w-5xl mx-auto">
-        <button
-          onClick={() => router.push("/dashboard")}
-          className="group flex items-center gap-2 font-mono text-[10px] text-zinc-600 hover:text-zinc-300 tracking-wider uppercase transition-colors duration-300"
-        >
-          <svg
-            className="w-3 h-3 transition-transform duration-300 group-hover:-translate-x-0.5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M7 17l-4-4m0 0l4-4m-4 4h18"
-            />
-          </svg>
-          Dashboard
-        </button>
-
-        <div className="flex items-center gap-3">
+      <nav className="relative z-10 flex items-center justify-center px-8 lg:px-12 py-5 max-w-5xl mx-auto">
+        <a href="/" className="flex items-center gap-3">
           <div className="w-1.5 h-1.5 rounded-full bg-accent" />
           <span className="font-display font-bold text-lg tracking-wide text-foreground">
             daxerly
           </span>
-        </div>
-
-        <div className="w-20" />
+        </a>
       </nav>
 
       {/* ── Receipt ─────────────────────────── */}
