@@ -7,15 +7,5 @@ export async function hasActiveSubscription(userId: string): Promise<boolean> {
 
   if (!sub) return false;
 
-  if (sub.status === "ACTIVE") return true;
-
-  if (
-    sub.status === "CANCELLED" &&
-    sub.currentPeriodEnd &&
-    sub.currentPeriodEnd > new Date()
-  ) {
-    return true;
-  }
-
-  return false;
+  return sub.status === "ACTIVE";
 }
