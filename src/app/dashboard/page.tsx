@@ -474,7 +474,7 @@ export default function DashboardPage() {
                   </button>
                 </div>
                 <SocialShareButtons
-                  receiptUrl={`${typeof window !== "undefined" ? window.location.origin : ""}/receipt/${latestReceipt.id}`}
+                  receiptId={latestReceipt.id}
                   totalValue={`$${latestReceipt.totalValue.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
                 />
               </div>

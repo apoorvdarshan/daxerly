@@ -1,7 +1,9 @@
 "use client";
 
+const BASE_URL = "https://daxerly.vercel.app";
+
 interface SocialShareButtonsProps {
-  receiptUrl: string;
+  receiptId: string;
   totalValue: string;
 }
 
@@ -59,9 +61,10 @@ const platforms = [
 ];
 
 export default function SocialShareButtons({
-  receiptUrl,
+  receiptId,
   totalValue,
 }: SocialShareButtonsProps) {
+  const receiptUrl = `${BASE_URL}/receipt/${receiptId}`;
   const shareText = `Check out my daily work receipt — ${totalValue} of value shipped today! #daxerly`;
 
   return (
