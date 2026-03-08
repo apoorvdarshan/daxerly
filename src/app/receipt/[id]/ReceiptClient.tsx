@@ -179,6 +179,7 @@ export default function ReceiptClient({ id }: { id: string }) {
             </svg>
             <span className="font-mono text-[10px] text-background font-medium tracking-wider uppercase">
               {copied ? "Copied!" : "Copy"}
+            </span>
           </button>
 
           <ShareButton receiptId={id} receiptRef={receiptRef} />
