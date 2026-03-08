@@ -17,7 +17,7 @@ const reasons = [
   "Other",
 ];
 
-type Step = "reason" | "offer" | "cancelling";
+type Step = "reason" | "cancelling";
 
 export default function CancelSubscriptionModal({
   open,
@@ -139,63 +139,11 @@ export default function CancelSubscriptionModal({
                 Never mind
               </button>
               <button
-                onClick={() => setStep("offer")}
+                onClick={handleCancel}
                 disabled={!reason}
                 className="bg-accent hover:bg-accent-light disabled:bg-zinc-800 disabled:text-zinc-600 text-background font-display font-bold px-6 py-2.5 text-sm tracking-wide transition-all duration-300"
               >
-                Continue
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* ── Step: Offer ── */}
-        {step === "offer" && (
-          <div className="p-6 space-y-6">
-            <div className="space-y-1">
-              <h3 className="font-display font-bold text-lg text-zinc-200 tracking-wide">
-                Before you go...
-              </h3>
-              <p className="font-mono text-[11px] text-zinc-500 tracking-wider">
-                We&apos;d love to keep you around
-              </p>
-            </div>
-
-            <div className="border border-accent/20 bg-accent/5 p-5 space-y-3">
-              <div className="font-mono text-[10px] text-accent tracking-[0.2em] uppercase">
-                Special Offer
-              </div>
-              <div className="flex items-baseline gap-3">
-                <span className="text-zinc-600 line-through text-sm">
-                  $5/mo
-                </span>
-                <span className="font-display font-bold text-2xl text-accent">
-                  $3/mo
-                </span>
-              </div>
-              <p className="font-mono text-[11px] text-zinc-500 tracking-wider">
-                for the next 3 months
-              </p>
-            </div>
-
-            {error && (
-              <div className="font-mono text-[11px] text-red-400 tracking-wider">
-                {error}
-              </div>
-            )}
-
-            <div className="space-y-3">
-              <button
-                onClick={onClose}
-                className="w-full bg-accent hover:bg-accent-light text-background font-display font-bold py-3 text-sm tracking-wide transition-all duration-300"
-              >
-                Accept Offer
-              </button>
-              <button
-                onClick={handleCancel}
-                className="w-full font-mono text-[10px] text-zinc-600 hover:text-zinc-400 tracking-wider uppercase transition-colors py-2"
-              >
-                No thanks, cancel my subscription
+                Cancel Subscription
               </button>
             </div>
           </div>
