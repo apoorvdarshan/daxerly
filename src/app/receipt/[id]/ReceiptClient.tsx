@@ -202,6 +202,7 @@ export default function ReceiptClient({ id }: { id: string }) {
           <SocialShareButtons
             receiptId={id}
             totalValue={`$${receipt.totalValue.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+            receiptRef={receiptRef}
           />
         </div>
       </main>

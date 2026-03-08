@@ -1,10 +1,14 @@
 "use client";
 
+import { RefObject, useState } from "react";
+import { toPng } from "html-to-image";
+
 const BASE_URL = "https://daxerly.vercel.app";
 
 interface SocialShareButtonsProps {
   receiptId: string;
   totalValue: string;
+  receiptRef: RefObject<HTMLDivElement | null>;
 }
 
 const platforms = [
@@ -63,12 +67,39 @@ const platforms = [
 export default function SocialShareButtons({
   receiptId,
   totalValue,
+  receiptRef,
 }: SocialShareButtonsProps) {
+  const [toast, setToast] = useState<string | null>(null);
   const receiptUrl = `${BASE_URL}/receipt/${receiptId}`;
   const shareText = `Check out my daily work receipt — ${totalValue} of value shipped today! #daxerly`;
 
+  const showToast = (msg: string) => {
+    setToast(msg);
+    setTimeout(() => setToast(null), 3000);
+  };
+
+  const copyImageAndShare = async (shareUrl: string) => {
+    if (receiptRef.current) {
+      try {
+        const dataUrl = await toPng(receiptRef.current, {
+          backgroundColor: "#ffffff",
+          pixelRatio: 3,
+        });
+        const res = await fetch(dataUrl);
+        const blob = await res.blob();
+        await navigator.clipboard.write([
+          new ClipboardItem({ "image/png": blob }),
+        ]);
+        showToast("Image copied — paste it in your post!");
+      } catch {
+        showToast("Could not copy image — link will still be shared");
+      }
+    }
+    window.open(shareUrl, "_blank", "noopener,noreferrer");
+  };
+
   return (
-    <div className="flex flex-col items-center gap-2.5">
+    <div className="flex flex-col items-center gap-2.5 relative">
       <div className="flex items-center gap-3">
         <div className="h-px w-4 bg-zinc-800" />
         <span className="font-mono text-[9px] tracking-[0.25em] text-zinc-600 uppercase">
@@ -78,18 +109,21 @@ export default function SocialShareButtons({
       </div>
       <div className="flex gap-2">
         {platforms.map((p) => (
-          <a
+          <button
             key={p.name}
-            href={p.url(receiptUrl, shareText)}
-            target="_blank"
-            rel="noopener noreferrer"
+            onClick={() => copyImageAndShare(p.url(receiptUrl, shareText))}
             title={`Share on ${p.name}`}
-            className="group flex items-center justify-center w-9 h-9 border border-surface-border/50 bg-surface/50 hover:bg-surface hover:border-surface-border text-zinc-500 hover:text-zinc-300 transition-all duration-300"
+            className="group flex items-center justify-center w-9 h-9 border border-surface-border/50 bg-surface/50 hover:bg-surface hover:border-surface-border text-zinc-500 hover:text-zinc-300 transition-all duration-300 cursor-pointer"
           >
             {p.icon}
-          </a>
+          </button>
         ))}
       </div>
+      {toast && (
+        <div className="absolute -bottom-9 left-1/2 -translate-x-1/2 whitespace-nowrap font-mono text-[10px] text-emerald-500/80 tracking-wider animate-fade-in">
+          {toast}
+        </div>
+      )}
     </div>
   );
 }
