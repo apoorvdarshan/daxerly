@@ -149,8 +149,11 @@ function DashboardContent() {
     }
   }, [searchParams, router]);
 
+  const [generateError, setGenerateError] = useState<string | null>(null);
+
   const generateReceipt = async () => {
     setGenerating(true);
+    setGenerateError(null);
     try {
       const res = await fetch("/api/generate", { method: "POST" });
       if (res.ok) {
@@ -159,7 +162,12 @@ function DashboardContent() {
         setReceipts((prev) => [receipt, ...prev]);
       } else if (res.status === 403) {
         setSubscriptionActive(false);
+      } else {
+        const data = await res.json().catch(() => ({}));
+        setGenerateError(data.error || "Failed to generate receipt");
       }
+    } catch {
+      setGenerateError("Something went wrong. Please try again.");
     } finally {
       setGenerating(false);
     }
@@ -392,6 +400,11 @@ function DashboardContent() {
                     </span>
                   )}
                 </button>
+                {generateError && (
+                  <div className="mt-3 font-mono text-[11px] text-red-400 tracking-wider">
+                    {generateError}
+                  </div>
+                )}
                 </>
               ) : (
                 <div className="border border-surface-border/40 bg-surface/30 p-6 space-y-4">
