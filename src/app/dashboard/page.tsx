@@ -109,6 +109,7 @@ function DashboardContent() {
   const [subscriptionActive, setSubscriptionActive] = useState<boolean | null>(null);
   const [subscribing, setSubscribing] = useState(false);
   const [showCancelModal, setShowCancelModal] = useState(false);
+  const [pageReady, setPageReady] = useState(false);
   const receiptRef = useRef<HTMLDivElement>(null);
 
   const fetchData = useCallback(async () => {
@@ -133,6 +134,7 @@ function DashboardContent() {
     } else {
       setSubscriptionActive(false);
     }
+    setPageReady(true);
   }, []);
 
   useEffect(() => {
@@ -214,20 +216,22 @@ function DashboardContent() {
     }
   };
 
-  if (status === "loading") {
+  if (status === "loading" || !session || !pageReady) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="flex items-center gap-3">
-          <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
-          <span className="font-mono text-xs text-zinc-600 tracking-wider">
-            LOADING
+        <div className="flex flex-col items-center gap-4">
+          <div className="flex items-center gap-2">
+            <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+            <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse [animation-delay:200ms]" />
+            <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse [animation-delay:400ms]" />
+          </div>
+          <span className="font-mono text-[10px] text-zinc-600 tracking-[0.25em] uppercase">
+            Loading your workspace
           </span>
         </div>
       </div>
     );
   }
-
-  if (!session) return null;
 
   return (
     <div className="min-h-screen bg-background relative">
