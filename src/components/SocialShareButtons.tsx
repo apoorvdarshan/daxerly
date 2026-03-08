@@ -1,6 +1,6 @@
 "use client";
 
-import { RefObject, useState } from "react";
+import { RefObject } from "react";
 import { toPng } from "html-to-image";
 
 const BASE_URL = "https://daxerly.vercel.app";
@@ -69,14 +69,8 @@ export default function SocialShareButtons({
   totalValue,
   receiptRef,
 }: SocialShareButtonsProps) {
-  const [toast, setToast] = useState<string | null>(null);
   const receiptUrl = `${BASE_URL}/receipt/${receiptId}`;
   const shareText = `Check out my daily work receipt — ${totalValue} of value shipped today! #daxerly`;
-
-  const showToast = (msg: string) => {
-    setToast(msg);
-    setTimeout(() => setToast(null), 3000);
-  };
 
   const copyImageAndShare = async (shareUrl: string) => {
     if (receiptRef.current) {
@@ -90,16 +84,15 @@ export default function SocialShareButtons({
         await navigator.clipboard.write([
           new ClipboardItem({ "image/png": blob }),
         ]);
-        showToast("Image copied — paste it in your post!");
       } catch {
-        showToast("Could not copy image — link will still be shared");
+        // ignore — link will still be shared
       }
     }
     window.open(shareUrl, "_blank", "noopener,noreferrer");
   };
 
   return (
-    <div className="flex flex-col items-center gap-2.5 relative">
+    <div className="flex flex-col items-center gap-2.5">
       <div className="flex items-center gap-3">
         <div className="h-px w-4 bg-zinc-800" />
         <span className="font-mono text-[9px] tracking-[0.25em] text-zinc-600 uppercase">
@@ -119,11 +112,6 @@ export default function SocialShareButtons({
           </button>
         ))}
       </div>
-      {toast && (
-        <div className="absolute -bottom-9 left-1/2 -translate-x-1/2 whitespace-nowrap font-mono text-[10px] text-emerald-500/80 tracking-wider animate-fade-in">
-          {toast}
-        </div>
-      )}
     </div>
   );
 }
