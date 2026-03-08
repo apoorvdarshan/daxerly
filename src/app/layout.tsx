@@ -36,9 +36,9 @@ export const metadata: Metadata = {
     siteName: "Daxerly",
     images: [
       {
-        url: "/og.png",
-        width: 1236,
-        height: 648,
+        url: "/og.jpg",
+        width: 1200,
+        height: 630,
         alt: "Daxerly — Your work has a price tag",
       },
     ],
@@ -49,7 +49,7 @@ export const metadata: Metadata = {
     title: "Daxerly — Daily Work Receipt Generator",
     description:
       "Connect your work tools, pull your daily activity, and generate a beautiful thermal receipt showing what you did and the dollar value of your output.",
-    images: ["/og.png"],
+    images: ["/og.jpg"],
   },
 };
 
