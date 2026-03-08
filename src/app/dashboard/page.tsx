@@ -107,7 +107,6 @@ function DashboardContent() {
   const [downloading, setDownloading] = useState(false);
   const [subscriptionActive, setSubscriptionActive] = useState<boolean | null>(null);
   const [subscribing, setSubscribing] = useState(false);
-  const [cancelling, setCancelling] = useState(false);
   const receiptRef = useRef<HTMLDivElement>(null);
 
   const fetchData = useCallback(async () => {
@@ -172,19 +171,6 @@ function DashboardContent() {
       }
     } finally {
       setSubscribing(false);
-    }
-  };
-
-  const handleCancel = async () => {
-    if (!confirm("Cancel your subscription? You'll keep access until the end of your billing period.")) return;
-    setCancelling(true);
-    try {
-      const res = await fetch("/api/subscription/cancel", { method: "POST" });
-      if (res.ok) {
-        fetchData();
-      }
-    } finally {
-      setCancelling(false);
     }
   };
 
@@ -337,6 +323,13 @@ function DashboardContent() {
                   <div className="h-4 w-32 bg-zinc-800/50 animate-pulse rounded" />
                 </div>
               ) : subscriptionActive ? (
+                <>
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                  <span className="font-mono text-[10px] text-emerald-500/80 tracking-wider uppercase">
+                    Subscription Active
+                  </span>
+                </div>
                 <button
                   onClick={generateReceipt}
                   disabled={generating}
@@ -386,13 +379,7 @@ function DashboardContent() {
                     </span>
                   )}
                 </button>
-                <button
-                  onClick={handleCancel}
-                  disabled={cancelling}
-                  className="w-full mt-2 font-mono text-[10px] text-zinc-600 hover:text-zinc-400 tracking-wider uppercase transition-colors py-2"
-                >
-                  {cancelling ? "Cancelling..." : "Cancel subscription"}
-                </button>
+                </>
               ) : (
                 <div className="border border-surface-border/40 bg-surface/30 p-6 space-y-4">
                   <div className="space-y-1">
@@ -400,7 +387,7 @@ function DashboardContent() {
                       Subscribe to generate receipts
                     </h3>
                     <p className="font-mono text-[11px] text-zinc-500 tracking-wider">
-                      $5/month &middot; Cancel anytime
+                      $5/month · Cancel anytime
                     </p>
                   </div>
                   <button
