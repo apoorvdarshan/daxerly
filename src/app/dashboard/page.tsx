@@ -88,6 +88,7 @@ export default function DashboardPage() {
     notion: false,
     gitlab: false,
   });
+  const [connectionsLoaded, setConnectionsLoaded] = useState(false);
   const [receipts, setReceipts] = useState<ReceiptData[]>([]);
   const [generating, setGenerating] = useState(false);
   const [latestReceipt, setLatestReceipt] = useState<ReceiptData | null>(null);
@@ -101,6 +102,7 @@ export default function DashboardPage() {
       const data = await connRes.json();
       setConnections(data);
     }
+    setConnectionsLoaded(true);
     if (recRes.ok) {
       const data = await recRes.json();
       setReceipts(data);
@@ -208,7 +210,9 @@ export default function DashboardPage() {
                         </span>
                       </div>
 
-                      {connected ? (
+                      {!connectionsLoaded ? (
+                        <div className="h-4 w-16 bg-zinc-800/50 animate-pulse rounded" />
+                      ) : connected ? (
                         <div className="flex items-center gap-2">
                           <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                           <span className="font-mono text-[10px] text-emerald-500/80 tracking-wider uppercase">
