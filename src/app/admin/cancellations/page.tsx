@@ -1,8 +1,6 @@
 "use client";
 
-import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 
 interface Cancellation {
   email: string;
@@ -13,30 +11,22 @@ interface Cancellation {
 }
 
 export default function AdminCancellationsPage() {
-  const { data: session, status } = useSession();
-  const router = useRouter();
   const [cancellations, setCancellations] = useState<Cancellation[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    if (status === "unauthenticated") {
-      router.push("/");
-      return;
-    }
-    if (status === "authenticated") {
-      fetch("/api/admin/cancellations")
-        .then((res) => {
-          if (!res.ok) throw new Error(res.status === 403 ? "Access denied" : "Failed to load");
-          return res.json();
-        })
-        .then(setCancellations)
-        .catch((err) => setError(err.message))
-        .finally(() => setLoading(false));
-    }
-  }, [status, router]);
+    fetch("/api/admin/cancellations")
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to load");
+        return res.json();
+      })
+      .then(setCancellations)
+      .catch((err) => setError(err.message))
+      .finally(() => setLoading(false));
+  }, []);
 
-  if (status === "loading" || loading) {
+  if (loading) {
     return (
       <div className="min-h-screen bg-gray-950 flex items-center justify-center">
         <p className="text-gray-400">Loading...</p>
