@@ -138,7 +138,7 @@ export default function DashboardPage() {
     setDownloading(true);
     try {
       const dataUrl = await toPng(receiptRef.current, {
-        backgroundColor: "#08080a",
+        backgroundColor: "#ffffff",
         pixelRatio: 3,
       });
       const link = document.createElement("a");
@@ -156,7 +156,7 @@ export default function DashboardPage() {
     if (!receiptRef.current) return;
     try {
       const dataUrl = await toPng(receiptRef.current, {
-        backgroundColor: "#08080a",
+        backgroundColor: "#ffffff",
         pixelRatio: 3,
       });
       const res = await fetch(dataUrl);

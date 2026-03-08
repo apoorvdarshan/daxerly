@@ -30,7 +30,7 @@ export default function ReceiptPage() {
     setDownloading(true);
     try {
       const dataUrl = await toPng(receiptRef.current, {
-        backgroundColor: "#08080a",
+        backgroundColor: "#ffffff",
         pixelRatio: 3,
       });
       const link = document.createElement("a");
@@ -48,7 +48,7 @@ export default function ReceiptPage() {
     if (!receiptRef.current) return;
     try {
       const dataUrl = await toPng(receiptRef.current, {
-        backgroundColor: "#08080a",
+        backgroundColor: "#ffffff",
         pixelRatio: 3,
       });
       const res = await fetch(dataUrl);
