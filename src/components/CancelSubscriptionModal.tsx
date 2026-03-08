@@ -62,9 +62,9 @@ export default function CancelSubscriptionModal({
       onCancelled();
     } catch {
       setError("Something went wrong. Please try again.");
-      setStep("offer");
+      setStep("reason");
     }
-  }, [reason, onCancelled]);
+  }, [reason, otherText, onCancelled]);
 
   if (!open) return null;
 
