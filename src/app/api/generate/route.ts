@@ -91,8 +91,8 @@ export async function POST() {
     );
   }
 
-  // Summarize with AI
-  const lineItems = await summarizeActivities(allActivities);
+  // Calculate line items
+  const lineItems = summarizeActivities(allActivities);
   const subtotal = lineItems.reduce((sum, item) => sum + item.value, 0);
   const tax = subtotal * 0.0869;
   const totalValue = Math.round((subtotal + tax) * 100) / 100;
