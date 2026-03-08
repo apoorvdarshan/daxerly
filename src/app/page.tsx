@@ -212,7 +212,7 @@ export default function LandingPage() {
             <span className="text-zinc-800">|</span>
             <a href="https://x.com/apoorvdarshan" target="_blank" rel="noopener noreferrer" className="hover:text-zinc-400 transition-colors">X @apoorvdarshan</a>
             <span className="text-zinc-800">|</span>
-            <a href="https://github.com/apoorvdarshan/daxerly" target="_blank" rel="noopener noreferrer" className="hover:text-zinc-400 transition-colors">GitHub</a>
+            <a href="https://github.com/apoorvdarshan" target="_blank" rel="noopener noreferrer" className="hover:text-zinc-400 transition-colors">GitHub</a>
             <span className="text-zinc-800">|</span>
             <a href="https://linkedin.com/in/apoorvdarshan" target="_blank" rel="noopener noreferrer" className="hover:text-zinc-400 transition-colors">LinkedIn</a>
           </div>
