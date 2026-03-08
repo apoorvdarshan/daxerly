@@ -2,7 +2,7 @@ import { ReceiptData } from "@/components/Receipt";
 
 export const mockReceipt: ReceiptData = {
   id: "clx7f9abc123",
-  date: new Date().toISOString(),
+  date: "2026-03-08T17:30:00.000Z",
   userName: "Jane Developer",
   lineItems: [
     { label: "GitHub Commits", quantity: "12 commits", value: 450.0 },
@@ -21,7 +21,7 @@ export const mockReceiptHistory: ReceiptData[] = [
   mockReceipt,
   {
     id: "clx7f9def456",
-    date: new Date(Date.now() - 86400000).toISOString(),
+    date: "2026-03-07T17:30:00.000Z",
     userName: "Jane Developer",
     lineItems: [
       { label: "GitHub Commits", quantity: "8 commits", value: 300.0 },
@@ -33,7 +33,7 @@ export const mockReceiptHistory: ReceiptData[] = [
   },
   {
     id: "clx7f9ghi789",
-    date: new Date(Date.now() - 86400000 * 2).toISOString(),
+    date: "2026-03-06T17:30:00.000Z",
     userName: "Jane Developer",
     lineItems: [
       { label: "GitHub Commits", quantity: "15 commits", value: 562.5 },
