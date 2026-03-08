@@ -456,6 +456,7 @@ export default function DashboardPage() {
                     </svg>
                     <span className="font-mono text-[10px] text-background font-medium tracking-wider uppercase">
                       {copied ? "Copied!" : "Copy"}
+                    </span>
                   </button>
 
                   <ShareButton
