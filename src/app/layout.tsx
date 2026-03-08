@@ -27,6 +27,30 @@ export const metadata: Metadata = {
   title: "Daxerly — Daily Work Receipt Generator",
   description:
     "Connect your work tools, pull your daily activity, and generate a beautiful thermal receipt showing what you did and the dollar value of your output.",
+  metadataBase: new URL("https://daxerly.vercel.app"),
+  openGraph: {
+    title: "Daxerly — Daily Work Receipt Generator",
+    description:
+      "Connect your work tools, pull your daily activity, and generate a beautiful thermal receipt showing what you did and the dollar value of your output.",
+    url: "https://daxerly.vercel.app",
+    siteName: "Daxerly",
+    images: [
+      {
+        url: "/og.png",
+        width: 1236,
+        height: 648,
+        alt: "Daxerly — Your work has a price tag",
+      },
+    ],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Daxerly — Daily Work Receipt Generator",
+    description:
+      "Connect your work tools, pull your daily activity, and generate a beautiful thermal receipt showing what you did and the dollar value of your output.",
+    images: ["/og.png"],
+  },
 };
 
 export default function RootLayout({
