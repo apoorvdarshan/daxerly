@@ -44,7 +44,7 @@ export default function TermsPage() {
           <div>
             <h2 className="text-gray-100 font-semibold mb-2">3. Subscription &amp; Payments</h2>
             <ul className="list-disc list-inside space-y-1 ml-2">
-              <li>The Service is available as a paid subscription at $4.99 per month.</li>
+              <li>The Service is available as a paid subscription at $0.99 per month.</li>
               <li>Payments are processed through PayPal.</li>
               <li>Your subscription will automatically renew each month unless cancelled.</li>
               <li>

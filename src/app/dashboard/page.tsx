@@ -413,7 +413,7 @@ function DashboardContent() {
                       Subscribe to generate receipts
                     </h3>
                     <p className="font-mono text-[11px] text-zinc-500 tracking-wider">
-                      $4.99/month · Cancel anytime
+                      $0.99/month · Cancel anytime
                     </p>
                   </div>
                   <button
