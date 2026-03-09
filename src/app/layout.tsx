@@ -44,6 +44,13 @@ export const metadata: Metadata = {
     ],
     type: "website",
   },
+  alternates: {
+    canonical: "/",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
   twitter: {
     card: "summary_large_image",
     title: "Daxerly — Daily Work Receipt Generator",
