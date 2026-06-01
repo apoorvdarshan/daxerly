@@ -187,7 +187,7 @@ export async function GET(
             letterSpacing: "0.2em",
           }}
         >
-          daxerly.vercel.app
+          daxerly.apoorvdarshan.com
         </div>
       </div>
     ),

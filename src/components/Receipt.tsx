@@ -190,7 +190,7 @@ const Receipt = forwardRef<HTMLDivElement, { data: ReceiptData; animate?: boolea
           </div>
 
           <div className="text-[8px] text-ink-faded/60 tracking-wider pt-1">
-            DAXERLY.VERCEL.APP
+            DAXERLY.APOORVDARSHAN.COM
           </div>
         </div>
       </div>

@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: ["/dashboard", "/admin/", "/api/"],
     },
-    sitemap: "https://daxerly.vercel.app/sitemap.xml",
+    sitemap: "https://daxerly.apoorvdarshan.com/sitemap.xml",
   };
 }

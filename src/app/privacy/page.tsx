@@ -28,7 +28,7 @@ export default function PrivacyPage() {
             <p>
               Daxerly (&quot;we&quot;, &quot;our&quot;, &quot;us&quot;) is operated by Apoorv Darshan. This Privacy
               Policy explains how we collect, use, and protect your information when you use
-              our service at daxerly.vercel.app.
+              our service at daxerly.apoorvdarshan.com.
             </p>
           </div>
 
