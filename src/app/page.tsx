@@ -88,9 +88,9 @@ export default function LandingPage() {
 
             {/* Subhead */}
             <p className="mt-8 text-base sm:text-lg text-zinc-500 max-w-md leading-relaxed font-body">
-              Connect your tools. We pull 24 hours of activity and print it as a
-              thermal receipt — with an estimated dollar value for everything you
-              shipped.
+              Connect your GitHub account. We pull your last 24 hours of activity
+              and print it as a thermal receipt — with an estimated dollar value
+              for everything you shipped.
             </p>
 
             {/* CTA */}
@@ -107,6 +107,23 @@ export default function LandingPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
               </button>
+            </div>
+
+            {/* Product Hunt */}
+            <div className="mt-6">
+              <a
+                href="https://www.producthunt.com/products/daxerly"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group inline-flex items-center gap-2.5 border border-[#DA552F]/30 hover:border-[#DA552F]/60 bg-[#DA552F]/[0.06] hover:bg-[#DA552F]/10 px-4 py-2.5 transition-all duration-300"
+              >
+                <svg className="w-3.5 h-3.5 text-[#DA552F]" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M12 4l8 14H4z" />
+                </svg>
+                <span className="font-mono text-[10px] tracking-wider text-zinc-400 group-hover:text-zinc-200 uppercase transition-colors">
+                  Vote on Product&nbsp;Hunt
+                </span>
+              </a>
             </div>
 
             {/* Integration pills */}
@@ -157,6 +174,15 @@ export default function LandingPage() {
             <span className="italic text-zinc-700">
               Proof of work, formatted as a receipt.
             </span>
+          </div>
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mb-3">
+            <span className="text-zinc-500 uppercase">Support</span>
+            <span className="text-zinc-800">·</span>
+            <a href="https://ko-fi.com/apoorvdarshan" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors uppercase">Ko-fi</a>
+            <span className="text-zinc-800">|</span>
+            <a href="https://paypal.me/apoorvdarshan" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors uppercase">PayPal</a>
+            <span className="text-zinc-800">|</span>
+            <a href="https://www.producthunt.com/products/daxerly" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors uppercase">Product Hunt</a>
           </div>
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
             <a href="/privacy" className="hover:text-zinc-400 transition-colors uppercase">Privacy</a>
