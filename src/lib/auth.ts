@@ -1,6 +1,5 @@
 import { NextAuthOptions } from "next-auth";
 import GitHubProvider from "next-auth/providers/github";
-import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { prisma } from "./prisma";
 
@@ -24,18 +23,6 @@ export const authOptions: NextAuthOptions = {
       authorization: {
         params: {
           scope: "read:user user:email repo",
-        },
-      },
-    }),
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID ?? "",
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "",
-      authorization: {
-        params: {
-          scope:
-            "openid email profile https://www.googleapis.com/auth/calendar.readonly",
-          access_type: "offline",
-          prompt: "consent",
         },
       },
     }),
@@ -66,8 +53,8 @@ export const authOptions: NextAuthOptions = {
           where: { email: user.email! },
         });
         if (!existingUser && user.email) {
-          // No user with this email — find any existing user to link to
-          // (for cases where GitHub email != Google email)
+          // No user with this email — link this account to the currently
+          // signed-in user's session, if any
           const sessions = await prisma.session.findMany({
             where: { expires: { gt: new Date() } },
             include: { user: true },

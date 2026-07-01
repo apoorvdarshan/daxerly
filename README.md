@@ -6,8 +6,8 @@
 
 ### Your work has a price tag.
 
-Connect your tools and Daxerly prints your last 24 hours of work as a
-thermal receipt — with an estimated dollar value for everything you shipped.
+Connect GitHub and Daxerly prints your last 24 hours of work as a thermal
+receipt — with an estimated dollar value for everything you shipped.
 
 <br/>
 
@@ -31,25 +31,25 @@ thermal receipt — with an estimated dollar value for everything you shipped.
 ---
 
 **Daxerly** turns your daily activity into proof of work — formatted as a receipt.
-Sign in, connect **GitHub** and **Google Calendar**, and generate a daily *work
-receipt* that lists what you shipped in the last 24 hours, with an estimated
-dollar value, a productivity tax, and a grand total. Download it, copy it as an
-image, or share a link. It's completely **free**.
+Sign in, connect **GitHub**, and generate a daily *work receipt* that lists what
+you shipped in the last 24 hours, with an estimated dollar value, a productivity
+tax, and a grand total. Download it, copy it as an image, or share a link. It's
+completely **free**.
 
 ## ✨ Features
 
 - **One-click work receipts** — pulls your last 24h of activity and prices it out
-- **GitHub + Google Calendar** — commits, PRs, reviews, issues, and meetings
+- **GitHub-powered** — commits, pull requests, code reviews, and issues
 - **Thermal-receipt UI** — a pixel-crafted receipt you can download or copy as PNG
 - **Shareable** — every receipt gets its own page and social (OG) image
 - **Receipt history** — revisit everything you've generated
-- **Free & no lock-in** — sign in with GitHub, connect what you want, done
+- **Free & no lock-in** — sign in with GitHub and go
 
 ## 🧾 How it works
 
 1. **Sign in** with GitHub (NextAuth with database-backed sessions).
-2. **Connect tools** — GitHub and Google Calendar via OAuth; tokens are stored per user.
-3. **Generate** — Daxerly pulls the last 24 hours of activity from each connected tool.
+2. **Connect** — GitHub via OAuth; your access token is stored per user.
+3. **Generate** — Daxerly pulls the last 24 hours of activity from GitHub.
 4. **Pricing** — each activity type maps to an estimated time-per-unit, valued at
    **$150/hr**, plus an **8.69% "productivity tax."**
 5. **Receipt** — the line items render as a thermal receipt you can save or share.
@@ -61,13 +61,12 @@ image, or share a link. It's completely **free**.
 | Tool | What it reads |
 | --- | --- |
 | **GitHub** | Commits, pull requests opened, code reviews, issues |
-| **Google Calendar** | Meetings attended and time spent |
 
 ## 🛠 Tech Stack
 
 - **Framework:** Next.js 14 (App Router) · React 18 · TypeScript
 - **Styling:** Tailwind CSS
-- **Auth:** NextAuth.js v4 (GitHub + Google) with the Prisma adapter and database sessions
+- **Auth:** NextAuth.js v4 (GitHub) with the Prisma adapter and database sessions
 - **Database:** PostgreSQL on [Neon](https://neon.tech), via Prisma 5
 - **Image export:** html-to-image (receipts → PNG)
 - **Hosting:** Vercel
@@ -78,7 +77,7 @@ image, or share a link. It's completely **free**.
 
 - Node.js 20+
 - A PostgreSQL database (a free [Neon](https://neon.tech) project works great)
-- GitHub and Google OAuth apps
+- A GitHub OAuth app
 
 ### 1. Clone & install
 
@@ -100,12 +99,12 @@ cp .env.example .env
 | `NEXTAUTH_SECRET` | Random secret — generate with `openssl rand -base64 32` |
 | `NEXTAUTH_URL` | App URL — `http://localhost:3000` for local dev |
 | `GITHUB_CLIENT_ID` / `GITHUB_CLIENT_SECRET` | GitHub OAuth app |
-| `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` | Google OAuth app (with the Calendar read-only scope) |
 
-OAuth **callback URLs** to register (local dev):
+Register this GitHub OAuth **callback URL** (local dev):
 
-- GitHub → `http://localhost:3000/api/auth/callback/github`
-- Google → `http://localhost:3000/api/auth/callback/google`
+```
+http://localhost:3000/api/auth/callback/github
+```
 
 ### 3. Set up the database
 
@@ -128,14 +127,14 @@ Open <http://localhost:3000>.
 src/
 ├─ app/
 │  ├─ api/             # auth, connections, generate, receipts, og image
-│  ├─ dashboard/       # connect tools + generate receipts
+│  ├─ dashboard/       # connect GitHub + generate receipts
 │  ├─ receipt/[id]/    # shareable receipt page
 │  ├─ privacy · tos/   # legal pages
 │  └─ page.tsx         # landing
 ├─ components/
 │  └─ Receipt.tsx      # the thermal-receipt component
 └─ lib/
-   ├─ integrations/    # github + google-calendar activity pullers
+   ├─ integrations/    # github activity puller
    ├─ summarizer.ts    # activity → dollar-value estimator
    └─ auth.ts          # NextAuth configuration
 prisma/
@@ -145,9 +144,9 @@ prisma/
 ## ☁️ Deployment
 
 Runs on **Vercel** with a **Neon** Postgres database. Set the same env vars in
-your Vercel project, point production `NEXTAUTH_URL` and your OAuth callback URLs
-at your domain (e.g. `https://your-domain/api/auth/callback/github`), and run
-`prisma migrate deploy` on release.
+your Vercel project, point production `NEXTAUTH_URL` and your GitHub OAuth
+callback URL at your domain (e.g. `https://your-domain/api/auth/callback/github`),
+and run `prisma migrate deploy` on release.
 
 ## 📄 License
 

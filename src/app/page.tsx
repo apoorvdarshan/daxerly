@@ -15,15 +15,6 @@ const integrations = [
       </svg>
     ),
   },
-  {
-    name: "Google Calendar",
-    desc: "Meetings, time tracked",
-    icon: (
-      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-        <path d="M19.5 3h-3V1.5a.75.75 0 00-1.5 0V3h-6V1.5a.75.75 0 00-1.5 0V3h-3A2.25 2.25 0 002.25 5.25v14.25A2.25 2.25 0 004.5 21.75h15a2.25 2.25 0 002.25-2.25V5.25A2.25 2.25 0 0019.5 3zm.75 16.5a.75.75 0 01-.75.75h-15a.75.75 0 01-.75-.75V9h16.5v10.5zm0-12H3.75V5.25a.75.75 0 01.75-.75h3v.75a.75.75 0 001.5 0V4.5h6v.75a.75.75 0 001.5 0V4.5h3a.75.75 0 01.75.75V7.5z" />
-      </svg>
-    ),
-  },
 ];
 
 export default function LandingPage() {

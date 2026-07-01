@@ -18,6 +18,5 @@ export async function GET() {
 
   return NextResponse.json({
     github: providers.includes("github"),
-    google: providers.includes("google"),
   });
 }

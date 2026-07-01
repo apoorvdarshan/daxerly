@@ -9,7 +9,6 @@ export const mockReceipt: ReceiptData = {
     { label: "Pull Requests Opened", quantity: "3 PRs", value: 337.5 },
     { label: "Code Reviews", quantity: "5 reviews", value: 187.5 },
     { label: "Issues Closed", quantity: "4 issues", value: 300.0 },
-    { label: "Meetings Attended", quantity: "2 meetings (1.5 hrs)", value: 225.0 },
   ],
-  totalValue: 1630.35,
+  totalValue: 1385.8,
 };

@@ -9,7 +9,6 @@ import ShareButton from "@/components/SocialShareButtons";
 
 interface ConnectionStatus {
   github: boolean;
-  google: boolean;
 }
 
 const providerMeta = [
@@ -20,16 +19,6 @@ const providerMeta = [
     icon: (
       <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
         <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
-      </svg>
-    ),
-  },
-  {
-    key: "google" as const,
-    label: "Calendar",
-    provider: "google",
-    icon: (
-      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-        <path d="M19.5 3h-3V1.5a.75.75 0 00-1.5 0V3h-6V1.5a.75.75 0 00-1.5 0V3h-3A2.25 2.25 0 002.25 5.25v14.25A2.25 2.25 0 004.5 21.75h15a2.25 2.25 0 002.25-2.25V5.25A2.25 2.25 0 0019.5 3zm.75 16.5a.75.75 0 01-.75.75h-15a.75.75 0 01-.75-.75V9h16.5v10.5zm0-12H3.75V5.25a.75.75 0 01.75-.75h3v.75a.75.75 0 001.5 0V4.5h6v.75a.75.75 0 001.5 0V4.5h3a.75.75 0 01.75.75V7.5z" />
       </svg>
     ),
   },
@@ -44,7 +33,6 @@ function DashboardContent() {
   const router = useRouter();
   const [connections, setConnections] = useState<ConnectionStatus>({
     github: false,
-    google: false,
   });
   const [connectionsLoaded, setConnectionsLoaded] = useState(false);
   const [receipts, setReceipts] = useState<ReceiptData[]>([]);

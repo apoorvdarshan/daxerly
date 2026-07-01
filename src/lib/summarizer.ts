@@ -28,7 +28,6 @@ function estimateValue(activity: RawActivityItem): number {
     github_prs_opened: 0.75, // ~45 min per PR
     github_prs_reviewed: 0.25, // ~15 min per review
     github_issues: 0.5, // ~30 min per issue
-    calendar_meetings: 1 / 60, // per minute of meeting
   };
 
   const hoursPerUnit = estimates[activity.type] || 0.1;

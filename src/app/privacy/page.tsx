@@ -42,8 +42,8 @@ export default function PrivacyPage() {
               </li>
               <li>
                 <strong className="text-zinc-300">Integration data:</strong> when you connect third-party
-                services (GitHub and Google Calendar), we access activity data such as commits
-                and calendar events to generate your daily work receipts.
+                services (currently GitHub), we access activity data such as commits, pull
+                requests, and issues to generate your daily work receipts.
               </li>
               <li>
                 <strong className="text-zinc-300">Usage data:</strong> we collect basic usage analytics
@@ -74,9 +74,9 @@ export default function PrivacyPage() {
           <div>
             <h2 className="text-gray-100 font-semibold mb-2">5. Third-Party Services</h2>
             <p>
-              We integrate with the following third-party services: GitHub and Google Calendar.
-              Each of these services has its own privacy policy. We only access the data
-              necessary to provide our service and do not sell your data to third parties.
+              We integrate with the following third-party service: GitHub. It has its own
+              privacy policy. We only access the data necessary to provide our service and do
+              not sell your data to third parties.
             </p>
           </div>
 

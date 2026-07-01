@@ -3,10 +3,6 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { pullGitHubActivity, formatGitHubActivity } from "@/lib/integrations/github";
-import {
-  pullCalendarActivity,
-  formatCalendarActivity,
-} from "@/lib/integrations/google-calendar";
 import { summarizeActivities } from "@/lib/summarizer";
 
 export async function POST() {
@@ -33,10 +29,6 @@ export async function POST() {
         case "github": {
           const activity = await pullGitHubActivity(conn.accessToken);
           return formatGitHubActivity(activity);
-        }
-        case "google": {
-          const activity = await pullCalendarActivity(conn.accessToken);
-          return formatCalendarActivity(activity);
         }
         default:
           return [];
