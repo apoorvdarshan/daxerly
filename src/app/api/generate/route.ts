@@ -12,19 +12,11 @@ import { pullLinearActivity, formatLinearActivity } from "@/lib/integrations/lin
 import { pullNotionActivity, formatNotionActivity } from "@/lib/integrations/notion";
 import { pullGitLabActivity, formatGitLabActivity } from "@/lib/integrations/gitlab";
 import { summarizeActivities } from "@/lib/summarizer";
-import { hasActiveSubscription } from "@/lib/subscription";
 
 export async function POST() {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
-  if (!(await hasActiveSubscription(session.user.id))) {
-    return NextResponse.json(
-      { error: "subscription_required" },
-      { status: 403 }
-    );
   }
 
   const connections = await prisma.connection.findMany({

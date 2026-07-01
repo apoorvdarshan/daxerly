@@ -19,8 +19,6 @@ model User {
   sessions    Session[]
   connections  Connection[]
   receipts     Receipt[]
-  subscription     Subscription?
-  cancellationLogs CancellationLog[]
 }
 
 model Account {
@@ -82,26 +80,4 @@ model Receipt {
   summary    String?  @db.Text
   createdAt  DateTime @default(now())
   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-model Subscription {
-  id                   String    @id @default(cuid())
-  userId               String    @unique
-  paypalSubscriptionId String    @unique
-  status               String
-  currentPeriodStart   DateTime?
-  currentPeriodEnd     DateTime?
-  cancelReason         String?
-  cancelledAt          DateTime?
-  createdAt            DateTime  @default(now())
-  updatedAt            DateTime  @updatedAt
-  user                 User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-model CancellationLog {
-  id        String   @id @default(cuid())
-  userId    String
-  reason    String?
-  createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

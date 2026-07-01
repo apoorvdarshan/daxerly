@@ -19,7 +19,7 @@ export default function TermsPage() {
           Terms of Service
         </h1>
         <p className="text-zinc-500 text-xs mb-12">
-          Last updated: March 9, 2026
+          Last updated: July 1, 2026
         </p>
 
         <section className="space-y-8 text-zinc-400">
@@ -42,20 +42,12 @@ export default function TermsPage() {
           </div>
 
           <div>
-            <h2 className="text-gray-100 font-semibold mb-2">3. Subscription &amp; Payments</h2>
-            <ul className="list-disc list-inside space-y-1 ml-2">
-              <li>The Service is available as a paid subscription at $0.99 per month.</li>
-              <li>Payments are processed through PayPal.</li>
-              <li>Your subscription will automatically renew each month unless cancelled.</li>
-              <li>
-                You may cancel your subscription at any time. Cancellation takes effect at the
-                end of your current billing period.
-              </li>
-              <li>
-                Refunds are provided at our discretion. Contact us if you believe you are
-                entitled to a refund.
-              </li>
-            </ul>
+            <h2 className="text-gray-100 font-semibold mb-2">3. Free Service</h2>
+            <p>
+              The Service is provided free of charge. There are no subscription fees or
+              payments required to use Daxerly. We do not process payments or collect any
+              payment information.
+            </p>
           </div>
 
           <div>
@@ -122,7 +114,7 @@ export default function TermsPage() {
             <p>
               We reserve the right to suspend or terminate your account at any time for
               violation of these terms. You may terminate your account at any time by
-              cancelling your subscription and contacting us.
+              contacting us.
             </p>
           </div>
 

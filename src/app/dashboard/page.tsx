@@ -1,12 +1,11 @@
 "use client";
 
 import { useSession, signIn, signOut } from "next-auth/react";
-import { Suspense, useEffect, useState, useCallback, useRef } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState, useCallback, useRef } from "react";
+import { useRouter } from "next/navigation";
 import Receipt, { ReceiptData } from "@/components/Receipt";
 import { toPng } from "html-to-image";
 import ShareButton from "@/components/SocialShareButtons";
-import CancelSubscriptionModal from "@/components/CancelSubscriptionModal";
 
 interface ConnectionStatus {
   github: boolean;
@@ -81,17 +80,12 @@ const providerMeta = [
 ];
 
 export default function DashboardPage() {
-  return (
-    <Suspense>
-      <DashboardContent />
-    </Suspense>
-  );
+  return <DashboardContent />;
 }
 
 function DashboardContent() {
   const { data: session, status } = useSession();
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [connections, setConnections] = useState<ConnectionStatus>({
     github: false,
     slack: false,
@@ -106,17 +100,13 @@ function DashboardContent() {
   const [latestReceipt, setLatestReceipt] = useState<ReceiptData | null>(null);
   const [copied, setCopied] = useState(false);
   const [downloading, setDownloading] = useState(false);
-  const [subscriptionActive, setSubscriptionActive] = useState<boolean | null>(null);
-  const [subscribing, setSubscribing] = useState(false);
-  const [showCancelModal, setShowCancelModal] = useState(false);
   const [pageReady, setPageReady] = useState(false);
   const receiptRef = useRef<HTMLDivElement>(null);
 
   const fetchData = useCallback(async () => {
-    const [connRes, recRes, subRes] = await Promise.all([
+    const [connRes, recRes] = await Promise.all([
       fetch("/api/connections"),
       fetch("/api/receipts"),
-      fetch("/api/subscription/status"),
     ]);
     if (connRes.ok) {
       const data = await connRes.json();
@@ -128,12 +118,6 @@ function DashboardContent() {
       setReceipts(data);
       if (data.length > 0) setLatestReceipt(data[0]);
     }
-    if (subRes.ok) {
-      const data = await subRes.json();
-      setSubscriptionActive(data.active);
-    } else {
-      setSubscriptionActive(false);
-    }
     setPageReady(true);
   }, []);
 
@@ -141,13 +125,6 @@ function DashboardContent() {
     if (status === "unauthenticated") router.push("/");
     if (session) fetchData();
   }, [session, status, router, fetchData]);
-
-  useEffect(() => {
-    if (searchParams.get("subscribed") === "true") {
-      setSubscriptionActive(true);
-      router.replace("/dashboard");
-    }
-  }, [searchParams, router]);
 
   const [generateError, setGenerateError] = useState<string | null>(null);
 
@@ -160,8 +137,6 @@ function DashboardContent() {
         const receipt = await res.json();
         setLatestReceipt(receipt);
         setReceipts((prev) => [receipt, ...prev]);
-      } else if (res.status === 403) {
-        setSubscriptionActive(false);
       } else {
         const data = await res.json().catch(() => ({}));
         setGenerateError(data.error || "Failed to generate receipt");
@@ -170,19 +145,6 @@ function DashboardContent() {
       setGenerateError("Something went wrong. Please try again.");
     } finally {
       setGenerating(false);
-    }
-  };
-
-  const handleSubscribe = async () => {
-    setSubscribing(true);
-    try {
-      const res = await fetch("/api/subscription/create", { method: "POST" });
-      if (res.ok) {
-        const { approvalUrl } = await res.json();
-        window.location.href = approvalUrl;
-      }
-    } finally {
-      setSubscribing(false);
     }
   };
 
@@ -330,141 +292,60 @@ function DashboardContent() {
               </div>
             </section>
 
-            {/* Section: Generate / Paywall */}
+            {/* Section: Generate */}
             <section>
-              {subscriptionActive === null ? (
-                <div className="w-full border border-surface-border/30 py-5 flex justify-center">
-                  <div className="h-4 w-32 bg-zinc-800/50 animate-pulse rounded" />
-                </div>
-              ) : subscriptionActive ? (
-                <>
-                <div className="flex items-center gap-2 mb-3">
-                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                  <span className="font-mono text-[10px] text-emerald-500/80 tracking-wider uppercase">
-                    Subscription Active
-                  </span>
-                  <span className="text-zinc-700 text-[10px]">&middot;</span>
-                  <button
-                    onClick={() => setShowCancelModal(true)}
-                    className="font-mono text-[10px] text-zinc-600 hover:text-zinc-400 tracking-wider uppercase transition-colors"
-                  >
-                    Cancel
-                  </button>
-                </div>
-                <button
-                  onClick={generateReceipt}
-                  disabled={generating}
-                  className="group w-full relative overflow-hidden bg-accent hover:bg-accent-light disabled:bg-zinc-900 disabled:border disabled:border-zinc-800 text-background disabled:text-zinc-700 font-display font-bold py-5 text-base tracking-wide transition-all duration-300 hover:shadow-[0_0_60px_rgba(229,164,17,0.12)]"
-                >
-                  {generating ? (
-                    <span className="flex items-center justify-center gap-3">
-                      <svg
-                        className="animate-spin w-4 h-4"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="3"
-                        />
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-                        />
-                      </svg>
-                      <span className="font-mono text-xs tracking-widest uppercase">
-                        Printing receipt...
-                      </span>
-                    </span>
-                  ) : (
-                    <span className="flex items-center justify-center gap-3">
-                      Generate Today&apos;s Receipt
-                      <svg
-                        className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1"
-                        fill="none"
+              <button
+                onClick={generateReceipt}
+                disabled={generating}
+                className="group w-full relative overflow-hidden bg-accent hover:bg-accent-light disabled:bg-zinc-900 disabled:border disabled:border-zinc-800 text-background disabled:text-zinc-700 font-display font-bold py-5 text-base tracking-wide transition-all duration-300 hover:shadow-[0_0_60px_rgba(229,164,17,0.12)]"
+              >
+                {generating ? (
+                  <span className="flex items-center justify-center gap-3">
+                    <svg
+                      className="animate-spin w-4 h-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
                         stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M17 8l4 4m0 0l-4 4m4-4H3"
-                        />
-                      </svg>
+                        strokeWidth="3"
+                      />
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                      />
+                    </svg>
+                    <span className="font-mono text-xs tracking-widest uppercase">
+                      Printing receipt...
                     </span>
-                  )}
-                </button>
-                {generateError && (
-                  <div className="mt-3 font-mono text-[11px] text-red-400 tracking-wider">
-                    {generateError}
-                  </div>
+                  </span>
+                ) : (
+                  <span className="flex items-center justify-center gap-3">
+                    Generate Today&apos;s Receipt
+                    <svg
+                      className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M17 8l4 4m0 0l-4 4m4-4H3"
+                      />
+                    </svg>
+                  </span>
                 )}
-                </>
-              ) : (
-                <div className="border border-surface-border/40 bg-surface/30 p-6 space-y-4">
-                  <div className="space-y-1">
-                    <h3 className="font-display font-bold text-base text-zinc-200 tracking-wide">
-                      Subscribe to generate receipts
-                    </h3>
-                    <p className="font-mono text-[11px] text-zinc-500 tracking-wider">
-                      $0.99/month · Cancel anytime
-                    </p>
-                  </div>
-                  <button
-                    onClick={handleSubscribe}
-                    disabled={subscribing}
-                    className="group w-full relative overflow-hidden bg-[#0070ba] hover:bg-[#003087] disabled:bg-zinc-900 disabled:border disabled:border-zinc-800 text-white disabled:text-zinc-700 font-display font-bold py-4 text-sm tracking-wide transition-all duration-300"
-                  >
-                    {subscribing ? (
-                      <span className="flex items-center justify-center gap-3">
-                        <svg
-                          className="animate-spin w-4 h-4"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                        >
-                          <circle
-                            className="opacity-25"
-                            cx="12"
-                            cy="12"
-                            r="10"
-                            stroke="currentColor"
-                            strokeWidth="3"
-                          />
-                          <path
-                            className="opacity-75"
-                            fill="currentColor"
-                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-                          />
-                        </svg>
-                        <span className="font-mono text-xs tracking-widest uppercase">
-                          Redirecting...
-                        </span>
-                      </span>
-                    ) : (
-                      <span className="flex items-center justify-center gap-3">
-                        Subscribe with PayPal
-                        <svg
-                          className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M17 8l4 4m0 0l-4 4m4-4H3"
-                          />
-                        </svg>
-                      </span>
-                    )}
-                  </button>
+              </button>
+              {generateError && (
+                <div className="mt-3 font-mono text-[11px] text-red-400 tracking-wider">
+                  {generateError}
                 </div>
               )}
             </section>
@@ -618,15 +499,6 @@ function DashboardContent() {
           </div>
         </div>
       </main>
-
-      <CancelSubscriptionModal
-        open={showCancelModal}
-        onClose={() => setShowCancelModal(false)}
-        onCancelled={() => {
-          setShowCancelModal(false);
-          setSubscriptionActive(false);
-        }}
-      />
     </div>
   );
 }

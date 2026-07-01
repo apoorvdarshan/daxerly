@@ -19,7 +19,7 @@ export default function PrivacyPage() {
           Privacy Policy
         </h1>
         <p className="text-zinc-500 text-xs mb-12">
-          Last updated: March 9, 2026
+          Last updated: July 1, 2026
         </p>
 
         <section className="space-y-8 text-zinc-400">
@@ -47,11 +47,6 @@ export default function PrivacyPage() {
                 to generate your daily work receipts.
               </li>
               <li>
-                <strong className="text-zinc-300">Payment information:</strong> payments are processed
-                through PayPal. We do not store your full payment credentials. PayPal may collect
-                information according to their own privacy policy.
-              </li>
-              <li>
                 <strong className="text-zinc-300">Usage data:</strong> we collect basic usage analytics
                 such as pages visited and features used to improve the service.
               </li>
@@ -63,7 +58,6 @@ export default function PrivacyPage() {
             <ul className="list-disc list-inside space-y-1 ml-2">
               <li>To generate daily work receipts summarizing your activity across connected tools.</li>
               <li>To authenticate your identity and manage your account.</li>
-              <li>To process subscription payments via PayPal.</li>
               <li>To improve and maintain the service.</li>
               <li>To communicate with you about your account or service changes.</li>
             </ul>
@@ -84,7 +78,7 @@ export default function PrivacyPage() {
               We integrate with the following third-party services: GitHub, GitLab, Slack, Google
               Calendar, Linear, and Notion. Each of these services has its own privacy policy. We
               only access the data necessary to provide our service and do not sell your data to
-              third parties. Payments are processed by PayPal under their own privacy terms.
+              third parties.
             </p>
           </div>
 
@@ -105,7 +99,6 @@ export default function PrivacyPage() {
               <li>Request correction of inaccurate data.</li>
               <li>Request deletion of your data.</li>
               <li>Disconnect any third-party integration at any time.</li>
-              <li>Cancel your subscription at any time.</li>
             </ul>
           </div>
 
