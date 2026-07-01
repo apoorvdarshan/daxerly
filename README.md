@@ -14,6 +14,8 @@ receipt — with an estimated dollar value for everything you shipped.
 [![Live](https://img.shields.io/badge/Live-daxerly.apoorvdarshan.com-E5A411?style=for-the-badge&logo=vercel&logoColor=white)](https://daxerly.apoorvdarshan.com)
 &nbsp;
 [![Price](https://img.shields.io/badge/Price-Free-16A34A?style=for-the-badge)](https://daxerly.apoorvdarshan.com)
+&nbsp;
+[![License: MIT](https://img.shields.io/badge/License-MIT-E5A411?style=for-the-badge)](LICENSE)
 
 [![Next.js](https://img.shields.io/badge/Next.js-14-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)](https://nextjs.org)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
@@ -148,9 +150,14 @@ your Vercel project, point production `NEXTAUTH_URL` and your GitHub OAuth
 callback URL at your domain (e.g. `https://your-domain/api/auth/callback/github`),
 and run `prisma migrate deploy` on release.
 
+## 🤝 Contributing
+
+Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) to get started,
+and [SECURITY.md](SECURITY.md) to report a vulnerability.
+
 ## 📄 License
 
-© 2026 Apoorv Darshan. All rights reserved.
+Released under the [MIT License](LICENSE). © 2026 Apoorv Darshan.
 
 <div align="center">
 <br/>
