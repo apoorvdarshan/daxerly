@@ -35,9 +35,9 @@ export default function TermsPage() {
           <div>
             <h2 className="text-gray-100 font-semibold mb-2">2. Description of Service</h2>
             <p>
-              Daxerly is a SaaS platform that connects to your productivity tools (GitHub,
-              GitLab, Slack, Google Calendar, Linear, Notion) and generates daily work receipts
-              summarizing your activity with an estimated dollar value.
+              Daxerly is a platform that connects to your productivity tools (GitHub and
+              Google Calendar) and generates daily work receipts summarizing your activity
+              with an estimated dollar value.
             </p>
           </div>
 

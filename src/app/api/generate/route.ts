@@ -3,14 +3,10 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { pullGitHubActivity, formatGitHubActivity } from "@/lib/integrations/github";
-import { pullSlackActivity, formatSlackActivity } from "@/lib/integrations/slack";
 import {
   pullCalendarActivity,
   formatCalendarActivity,
 } from "@/lib/integrations/google-calendar";
-import { pullLinearActivity, formatLinearActivity } from "@/lib/integrations/linear";
-import { pullNotionActivity, formatNotionActivity } from "@/lib/integrations/notion";
-import { pullGitLabActivity, formatGitLabActivity } from "@/lib/integrations/gitlab";
 import { summarizeActivities } from "@/lib/summarizer";
 
 export async function POST() {
@@ -38,25 +34,9 @@ export async function POST() {
           const activity = await pullGitHubActivity(conn.accessToken);
           return formatGitHubActivity(activity);
         }
-        case "slack": {
-          const activity = await pullSlackActivity(conn.accessToken);
-          return formatSlackActivity(activity);
-        }
         case "google": {
           const activity = await pullCalendarActivity(conn.accessToken);
           return formatCalendarActivity(activity);
-        }
-        case "linear": {
-          const activity = await pullLinearActivity(conn.accessToken);
-          return formatLinearActivity(activity);
-        }
-        case "notion": {
-          const activity = await pullNotionActivity(conn.accessToken);
-          return formatNotionActivity(activity);
-        }
-        case "gitlab": {
-          const activity = await pullGitLabActivity(conn.accessToken);
-          return formatGitLabActivity(activity);
         }
         default:
           return [];
