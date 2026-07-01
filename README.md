@@ -1,36 +1,159 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<div align="center">
 
-## Getting Started
+<img src="public/logo.png" alt="Daxerly" width="110" />
 
-First, run the development server:
+# Daxerly
+
+### Your work has a price tag.
+
+Connect your tools and Daxerly prints your last 24 hours of work as a
+thermal receipt — with an estimated dollar value for everything you shipped.
+
+<br/>
+
+[![Live](https://img.shields.io/badge/Live-daxerly.apoorvdarshan.com-E5A411?style=for-the-badge&logo=vercel&logoColor=white)](https://daxerly.apoorvdarshan.com)
+&nbsp;
+[![Price](https://img.shields.io/badge/Price-Free-16A34A?style=for-the-badge)](https://daxerly.apoorvdarshan.com)
+
+[![Next.js](https://img.shields.io/badge/Next.js-14-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)](https://nextjs.org)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
+[![Prisma](https://img.shields.io/badge/Prisma-5-2D3748?style=for-the-badge&logo=prisma&logoColor=white)](https://www.prisma.io)
+[![Neon Postgres](https://img.shields.io/badge/Neon_Postgres-16-336791?style=for-the-badge&logo=postgresql&logoColor=white)](https://neon.tech)
+[![NextAuth](https://img.shields.io/badge/NextAuth.js-4-000000?style=for-the-badge)](https://next-auth.js.org)
+
+<br/>
+
+<img src="public/og.jpg" alt="Daxerly preview" width="620" />
+
+</div>
+
+---
+
+**Daxerly** turns your daily activity into proof of work — formatted as a receipt.
+Sign in, connect **GitHub** and **Google Calendar**, and generate a daily *work
+receipt* that lists what you shipped in the last 24 hours, with an estimated
+dollar value, a productivity tax, and a grand total. Download it, copy it as an
+image, or share a link. It's completely **free**.
+
+## ✨ Features
+
+- **One-click work receipts** — pulls your last 24h of activity and prices it out
+- **GitHub + Google Calendar** — commits, PRs, reviews, issues, and meetings
+- **Thermal-receipt UI** — a pixel-crafted receipt you can download or copy as PNG
+- **Shareable** — every receipt gets its own page and social (OG) image
+- **Receipt history** — revisit everything you've generated
+- **Free & no lock-in** — sign in with GitHub, connect what you want, done
+
+## 🧾 How it works
+
+1. **Sign in** with GitHub (NextAuth with database-backed sessions).
+2. **Connect tools** — GitHub and Google Calendar via OAuth; tokens are stored per user.
+3. **Generate** — Daxerly pulls the last 24 hours of activity from each connected tool.
+4. **Pricing** — each activity type maps to an estimated time-per-unit, valued at
+   **$150/hr**, plus an **8.69% "productivity tax."**
+5. **Receipt** — the line items render as a thermal receipt you can save or share.
+
+> Valuations are a playful heuristic, not an invoice. 😄
+
+## 🔌 Integrations
+
+| Tool | What it reads |
+| --- | --- |
+| **GitHub** | Commits, pull requests opened, code reviews, issues |
+| **Google Calendar** | Meetings attended and time spent |
+
+## 🛠 Tech Stack
+
+- **Framework:** Next.js 14 (App Router) · React 18 · TypeScript
+- **Styling:** Tailwind CSS
+- **Auth:** NextAuth.js v4 (GitHub + Google) with the Prisma adapter and database sessions
+- **Database:** PostgreSQL on [Neon](https://neon.tech), via Prisma 5
+- **Image export:** html-to-image (receipts → PNG)
+- **Hosting:** Vercel
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js 20+
+- A PostgreSQL database (a free [Neon](https://neon.tech) project works great)
+- GitHub and Google OAuth apps
+
+### 1. Clone & install
+
+```bash
+git clone https://github.com/apoorvdarshan/daxerly.git
+cd daxerly
+npm install
+```
+
+### 2. Configure environment
+
+```bash
+cp .env.example .env
+```
+
+| Variable | Description |
+| --- | --- |
+| `DATABASE_URL` | PostgreSQL connection string (Neon) |
+| `NEXTAUTH_SECRET` | Random secret — generate with `openssl rand -base64 32` |
+| `NEXTAUTH_URL` | App URL — `http://localhost:3000` for local dev |
+| `GITHUB_CLIENT_ID` / `GITHUB_CLIENT_SECRET` | GitHub OAuth app |
+| `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` | Google OAuth app (with the Calendar read-only scope) |
+
+OAuth **callback URLs** to register (local dev):
+
+- GitHub → `http://localhost:3000/api/auth/callback/github`
+- Google → `http://localhost:3000/api/auth/callback/google`
+
+### 3. Set up the database
+
+```bash
+npx prisma migrate deploy   # apply migrations
+npx prisma generate         # generate the Prisma client
+```
+
+### 4. Run
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open <http://localhost:3000>.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 📁 Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+src/
+├─ app/
+│  ├─ api/             # auth, connections, generate, receipts, og image
+│  ├─ dashboard/       # connect tools + generate receipts
+│  ├─ receipt/[id]/    # shareable receipt page
+│  ├─ privacy · tos/   # legal pages
+│  └─ page.tsx         # landing
+├─ components/
+│  └─ Receipt.tsx      # the thermal-receipt component
+└─ lib/
+   ├─ integrations/    # github + google-calendar activity pullers
+   ├─ summarizer.ts    # activity → dollar-value estimator
+   └─ auth.ts          # NextAuth configuration
+prisma/
+└─ schema.prisma       # User · Account · Session · Connection · Receipt
+```
 
-## Learn More
+## ☁️ Deployment
 
-To learn more about Next.js, take a look at the following resources:
+Runs on **Vercel** with a **Neon** Postgres database. Set the same env vars in
+your Vercel project, point production `NEXTAUTH_URL` and your OAuth callback URLs
+at your domain (e.g. `https://your-domain/api/auth/callback/github`), and run
+`prisma migrate deploy` on release.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 📄 License
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+© 2026 Apoorv Darshan. All rights reserved.
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+<div align="center">
+<br/>
+<sub>Proof of work, formatted as a receipt.</sub>
+</div>
