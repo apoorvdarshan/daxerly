@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import Receipt, { ReceiptData } from "@/components/Receipt";
 import { toPng } from "html-to-image";
 import ShareButton from "@/components/SocialShareButtons";
+import Link from "next/link";
 
 export default function ReceiptClient({ id }: { id: string }) {
   const [receipt, setReceipt] = useState<ReceiptData | null>(null);
@@ -82,12 +83,12 @@ export default function ReceiptClient({ id }: { id: string }) {
         <span className="font-mono text-[10px] text-zinc-600 tracking-wider uppercase mb-4">
           Receipt not found
         </span>
-        <a
+        <Link
           href="/"
           className="font-mono text-[10px] text-accent hover:text-accent-light tracking-wider uppercase transition-colors"
         >
           Go to Daxerly &rarr;
-        </a>
+        </Link>
       </div>
     );
   }
@@ -103,12 +104,12 @@ export default function ReceiptClient({ id }: { id: string }) {
 
       {/* ── Nav ─────────────────────────────── */}
       <nav className="relative z-10 flex items-center justify-center px-8 lg:px-12 py-5 max-w-5xl mx-auto">
-        <a href="/" className="flex items-center gap-3">
+        <Link href="/" className="flex items-center gap-3">
           <div className="w-1.5 h-1.5 rounded-full bg-accent" />
           <span className="font-display font-bold text-lg tracking-wide text-foreground">
             daxerly
           </span>
-        </a>
+        </Link>
       </nav>
 
       {/* ── Receipt ─────────────────────────── */}
