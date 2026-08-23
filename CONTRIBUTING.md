@@ -9,7 +9,7 @@ Be respectful and constructive. Harassment or hostile behavior isn't tolerated.
 
 ## Ways to Contribute
 
-- 🐛 **Report bugs** — open an [issue](https://github.com/apoorvdarshan/daxerly/issues) with clear steps to reproduce.
+- 🐛 **Report bugs** — open an [issue](https://github.com/aopv/daxerly/issues) with clear steps to reproduce.
 - 💡 **Suggest features** — open an issue describing the idea and the problem it solves.
 - 🔧 **Send a pull request** — fix a bug or build a feature (see the workflow below).
 - 📝 **Improve docs** — typos, clarifications, and examples are all appreciated.

@@ -84,7 +84,7 @@ completely **free**.
 ### 1. Clone & install
 
 ```bash
-git clone https://github.com/apoorvdarshan/daxerly.git
+git clone https://github.com/aopv/daxerly.git
 cd daxerly
 npm install
 ```
