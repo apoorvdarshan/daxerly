@@ -187,7 +187,7 @@ export async function GET(
             letterSpacing: "0.2em",
           }}
         >
-          daxerly.apoorvdarshan.com
+          daxerly.aopv.dev
         </div>
       </div>
     ),

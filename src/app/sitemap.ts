@@ -3,15 +3,15 @@ import { MetadataRoute } from "next";
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
     {
-      url: "https://daxerly.apoorvdarshan.com",
+      url: "https://daxerly.aopv.dev",
       lastModified: new Date(),
     },
     {
-      url: "https://daxerly.apoorvdarshan.com/privacy",
+      url: "https://daxerly.aopv.dev/privacy",
       lastModified: new Date(),
     },
     {
-      url: "https://daxerly.apoorvdarshan.com/tos",
+      url: "https://daxerly.aopv.dev/tos",
       lastModified: new Date(),
     },
   ];

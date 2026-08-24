@@ -26,12 +26,12 @@ export const metadata: Metadata = {
   title: "Daxerly — Daily Work Receipt Generator",
   description:
     "Connect your work tools, pull your daily activity, and generate a beautiful thermal receipt showing what you did and the dollar value of your output.",
-  metadataBase: new URL("https://daxerly.apoorvdarshan.com"),
+  metadataBase: new URL("https://daxerly.aopv.dev"),
   openGraph: {
     title: "Daxerly — Daily Work Receipt Generator",
     description:
       "Connect your work tools, pull your daily activity, and generate a beautiful thermal receipt showing what you did and the dollar value of your output.",
-    url: "https://daxerly.apoorvdarshan.com",
+    url: "https://daxerly.aopv.dev",
     siteName: "Daxerly",
     images: [
       {
