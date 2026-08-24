@@ -18,7 +18,7 @@ and the `main` branch of this repository.
 Instead, report it privately:
 
 - 📧 Email **ad13dtu@gmail.com** with the details, or
-- 🔒 Use GitHub's [private vulnerability reporting](https://github.com/aopv/daxerly/security/advisories/new).
+- 🔒 Use GitHub's [private vulnerability reporting](https://github.com/apoorvdarshan/daxerly/security/advisories/new).
 
 Please include:
 
