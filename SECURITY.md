@@ -3,7 +3,7 @@
 ## Supported Versions
 
 Daxerly is a continuously deployed web application. Security fixes are applied to
-the latest version running at [daxerly.aopv.dev](https://daxerly.aopv.dev)
+the latest version running at [daxerly.apoorvdarshan.com](https://daxerly.apoorvdarshan.com)
 and the `main` branch of this repository.
 
 | Version        | Supported |

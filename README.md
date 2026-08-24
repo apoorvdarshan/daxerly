@@ -11,9 +11,9 @@ receipt — with an estimated dollar value for everything you shipped.
 
 <br/>
 
-[![Live](https://img.shields.io/badge/Live-daxerly.aopv.dev-E5A411?style=for-the-badge&logo=vercel&logoColor=white)](https://daxerly.aopv.dev)
+[![Live](https://img.shields.io/badge/Live-daxerly.apoorvdarshan.com-E5A411?style=for-the-badge&logo=vercel&logoColor=white)](https://daxerly.apoorvdarshan.com)
 &nbsp;
-[![Price](https://img.shields.io/badge/Price-Free-16A34A?style=for-the-badge)](https://daxerly.aopv.dev)
+[![Price](https://img.shields.io/badge/Price-Free-16A34A?style=for-the-badge)](https://daxerly.apoorvdarshan.com)
 &nbsp;
 [![License: MIT](https://img.shields.io/badge/License-MIT-E5A411?style=for-the-badge)](LICENSE)
 
