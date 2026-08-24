@@ -7,7 +7,7 @@
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
-    "build:cloudflare": "NEXTAUTH_URL=https://daxerly.apoorvdarshan.com npx opennextjs-cloudflare build",
+    "build:cloudflare": "NEXTAUTH_URL=https://daxerly.aopv.dev npx opennextjs-cloudflare build",
     "deploy": "npx wrangler deploy"
   },
   "dependencies": {

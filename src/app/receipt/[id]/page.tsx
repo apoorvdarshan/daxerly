@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
 import ReceiptClient from "./ReceiptClient";
 
-const BASE_URL = "https://daxerly.apoorvdarshan.com";
+const BASE_URL = "https://daxerly.aopv.dev";
 
 export async function generateMetadata({
   params,
