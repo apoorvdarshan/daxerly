@@ -109,23 +109,6 @@ export default function LandingPage() {
               </button>
             </div>
 
-            {/* Product Hunt */}
-            <div className="mt-6">
-              <a
-                href="https://www.producthunt.com/products/daxerly"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group inline-flex items-center gap-2.5 border border-[#DA552F]/30 hover:border-[#DA552F]/60 bg-[#DA552F]/[0.06] hover:bg-[#DA552F]/10 px-4 py-2.5 transition-all duration-300"
-              >
-                <svg className="w-3.5 h-3.5 text-[#DA552F]" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                  <path d="M12 4l8 14H4z" />
-                </svg>
-                <span className="font-mono text-[10px] tracking-wider text-zinc-400 group-hover:text-zinc-200 uppercase transition-colors">
-                  Vote on Product&nbsp;Hunt
-                </span>
-              </a>
-            </div>
-
             {/* Integration pills */}
             <div className="mt-16 space-y-3">
               <span className="font-mono text-[9px] tracking-[0.25em] text-zinc-600 uppercase block mb-4">
@@ -181,8 +164,6 @@ export default function LandingPage() {
             <a href="https://ko-fi.com/apoorvdarshan" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors uppercase">Ko-fi</a>
             <span className="text-zinc-800">|</span>
             <a href="https://paypal.me/apoorvdarshan" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors uppercase">PayPal</a>
-            <span className="text-zinc-800">|</span>
-            <a href="https://www.producthunt.com/products/daxerly" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors uppercase">Product Hunt</a>
           </div>
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
             <a href="/privacy" className="hover:text-zinc-400 transition-colors uppercase">Privacy</a>
