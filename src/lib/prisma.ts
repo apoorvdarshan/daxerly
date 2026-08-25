@@ -1,27 +1,14 @@
 import { PrismaClient } from "@prisma/client/wasm";
-import { PrismaPg } from "@prisma/adapter-pg";
+import { PrismaNeon } from "@prisma/adapter-neon";
 
-const globalForPrisma = globalThis as unknown as {
-  prisma: PrismaClient | undefined;
-};
+const connectionString = process.env.DATABASE_URL;
 
-function getPrisma(): PrismaClient {
-  if (globalForPrisma.prisma) return globalForPrisma.prisma;
-
-  const connectionString = process.env.DATABASE_URL;
-  if (!connectionString) {
-    throw new Error("DATABASE_URL is not configured");
-  }
-
-  const adapter = new PrismaPg({ connectionString });
-  const client = new PrismaClient({ adapter });
-  globalForPrisma.prisma = client;
-  return client;
+if (!connectionString) {
+  throw new Error("DATABASE_URL is not configured");
 }
 
-export const prisma = new Proxy({} as PrismaClient, {
-  get(_target, property) {
-    const value = getPrisma()[property as keyof PrismaClient];
-    return typeof value === "function" ? value.bind(getPrisma()) : value;
-  },
-});
+// Neon uses HTTP in Workers, so the client does not retain a request-scoped
+// TCP socket that Cloudflare can cancel when the isolate handles another request.
+const adapter = new PrismaNeon({ connectionString });
+
+export const prisma = new PrismaClient({ adapter });
